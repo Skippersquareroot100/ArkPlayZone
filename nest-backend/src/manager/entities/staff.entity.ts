@@ -49,6 +49,9 @@ export class Staff {
   @Column()
   activity_id: number;
 
+  @Column()
+  photo: string;
+
   @ManyToOne(() => Name)
   @JoinColumn({ name: 'na_id' })
   name: Name;
