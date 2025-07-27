@@ -20,6 +20,9 @@ export class Usage {
   @Column({ type: 'varchar', length: 200 })
   condition_note: string;
 
+  @Column()
+  customer_id: number;
+
   @ManyToOne(() => Customer)
   @JoinColumn({ name: 'customer_id' })
   customer: Customer;
