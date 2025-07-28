@@ -40,7 +40,6 @@ export class Staff {
   @Column()
   ad_id: number;
 
-  @Column()
   incident_id: number;
 
   @Column()
@@ -51,6 +50,9 @@ export class Staff {
 
   @Column()
   photo: string;
+
+  @Column({ type: 'varchar', nullable: false })
+  password?: string;
 
   @ManyToOne(() => Name)
   @JoinColumn({ name: 'na_id' })
