@@ -1,8 +1,9 @@
-import { BadRequestException, Body, Controller, Get, Param, Post , Res, UploadedFile , UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, Post , Res, UploadedFile , UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { create_customer_dto } from './customer.dto';
 import { CustomerService } from './customer.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage, MulterError } from 'multer';
+import { Validate } from 'class-validator';
 
 
 @Controller('customer')
@@ -20,9 +21,10 @@ export class CustomerController {
         return this.customerService.create_customer(customer_dto)
     }*/
     @Post('add_customer')
+    @UsePipes(new ValidationPipe())
     @UseInterceptors(FileInterceptor('file',{
         fileFilter : (req,file,cb)=>{
-            if(file.originalname.match(/^.*\.(jpg|webp|png|jpeg|txt)$/)){
+            if(file.originalname.match(/^.*\.(jpg|webp|png|jpeg)$/)){
                 cb(null,true);
             }else{
                 cb(new MulterError('LIMIT_UNEXPECTED_FILE','image'),false);
@@ -37,7 +39,7 @@ export class CustomerController {
         })
     }))
         async add_customer(
-            @Body() customer_dto,
+            @Body() customer_dto : create_customer_dto,
             @UploadedFile() file : Express.Multer.File){
         if(!file){
             throw new BadRequestException("NID image is required and must be less than 2MB");

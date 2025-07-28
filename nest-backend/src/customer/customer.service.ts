@@ -6,8 +6,8 @@ export class CustomerService {
         return ['id' ,'123'];
     }
     create_customer(customer_dto : create_customer_dto , file : Express.Multer.File) : string{
-            const {name , email , password , nid_number} = customer_dto ;
-            return `Customer Created :\n  Name: ${name} \n Email : ${email} \n Password : ${password} \n  NID Number : ${nid_number} \n NID Image : ${file.originalname}`
+            const {name , email,gender , phone_number , password , nid_number} = customer_dto ;
+            return `Customer Created :\nName: ${name} \nEmail : ${email}\nGender : ${gender} \nPhone Number : ${phone_number} \nPassword : ${password} \nNID Number : ${nid_number} \nNID Image : ${file.originalname}`
         
     }
 

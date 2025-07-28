@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, Length, Matches, minLength, MinLength } from "class-validator";
+import { IsEmail, IsIn, IsInt, isNotEmpty, IsNotEmpty, IsNumberString, IsString, Length, Matches, minLength, MinLength } from "class-validator";
 
 export class create_customer_dto{
     @IsNotEmpty()
@@ -12,10 +12,23 @@ export class create_customer_dto{
     @IsEmail({},{
         message:'Email Must be and Valid Email',
     })
-    @Matches(/\.xyz$/, {
-    message: 'Email must be a valid email and end with .xyz',
+    // aiub.com
+    @Matches(/(\.xyz$|\.aiub\.edu$)/, {
+    message: 'Email must be a valid email and end with .xyz or aiub.edu',
     })
     email :  string ;
+
+    @IsNotEmpty()
+    @IsIn(['male','female'],{
+    message: 'Gender must be either "male" or "female"',
+    })
+    gender:string;
+
+    @IsNotEmpty()
+    @IsNumberString({}, {
+    message: 'Phone number must contain only numbers',
+    })
+    phone_number: string;
 
     @IsNotEmpty()
     @MinLength(6,{
