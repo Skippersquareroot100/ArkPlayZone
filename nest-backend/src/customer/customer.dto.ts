@@ -1,4 +1,4 @@
-import { IsEmail, IsIn, IsInt, isNotEmpty, IsNotEmpty, IsNumberString, IsString, Length, Matches, minLength, MinLength } from "class-validator";
+import { IsDateString, IsEmail, IsIn, IsInt, isNotEmpty, IsNotEmpty, IsNumberString, IsString, Length, Matches, minLength, MinLength } from "class-validator";
 
 export class create_customer_dto{
     @IsNotEmpty()
@@ -27,6 +27,9 @@ export class create_customer_dto{
     @IsNotEmpty()
     @IsNumberString({}, {
     message: 'Phone number must contain only numbers',
+    })
+    @Length(11,11,{
+        message : "Phone number must be 11 digits ",
     })
     phone_number: string;
 
