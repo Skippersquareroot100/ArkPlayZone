@@ -4,7 +4,7 @@ import { EmployeeModule } from './employee/employee.module';
 import { ManagerModule } from './manager/manager.module';
 import { CustomerModule } from './customer/customer.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { address_entity, customer_Entity, customerEntity } from './customer/customer.entity';
+import { address_entity, customer_Entity, otp_entity } from './customer/customer.entity';
 
 @Module({
   imports: [AdminModule, EmployeeModule, ManagerModule, CustomerModule, TypeOrmModule.forRoot(
@@ -18,7 +18,7 @@ import { address_entity, customer_Entity, customerEntity } from './customer/cust
     synchronize: true,
     autoLoadEntities: true,
     } ),
-    TypeOrmModule.forFeature([customer_Entity, customerEntity, address_entity]),
+    TypeOrmModule.forFeature([customer_Entity, address_entity, otp_entity]),
     ],
   })
 export class AppModule {}

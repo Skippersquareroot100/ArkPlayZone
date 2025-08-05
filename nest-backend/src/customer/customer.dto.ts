@@ -1,20 +1,23 @@
-import { IsDateString, IsEmail, IsIn, IsInt, isNotEmpty, IsNotEmpty, IsNumberString, IsString, Length, Matches, minLength, MinLength } from "class-validator";
+import { Type } from "class-transformer";
+import { IsDateString, IsEmail, IsIn, IsInt, isNotEmpty, IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString, Length, Matches, minLength, MinLength } from "class-validator";
 
 export class create_customer_dto{
     @IsNotEmpty()
     @IsString()
     @Matches(/^[A-Za-z\s]+$/, {
-    message: 'Name must contain only alphabets',
+    message: 'First name must contain only alphabets',
   })
-    name : string ;
+    first_name : string ;
+
+    @IsNotEmpty()
+    @IsString()
+    @Matches(/^[A-Za-z\s]+$/, {
+    message: 'Last name must contain only alphabets',})
+    last_name : string ;
     
     @IsNotEmpty()
     @IsEmail({},{
         message:'Email Must be and Valid Email',
-    })
-    // aiub.com
-    @Matches(/(\.xyz$|\.aiub\.edu$)/, {
-    message: 'Email must be a valid email and end with .xyz or aiub.edu',
     })
     email :  string ;
 
@@ -28,8 +31,8 @@ export class create_customer_dto{
     @IsNumberString({}, {
     message: 'Phone number must contain only numbers',
     })
-    @Length(11,11,{
-        message : "Phone number must be 11 digits ",
+    @Length(14,14,{
+        message : "Phone number must be 14 digits ",
     })
     phone_number: string;
 
@@ -50,10 +53,41 @@ export class create_customer_dto{
     message: 'Password must contain at least one special character',
     })
     password: string;
+
     @IsNotEmpty()
-    @Length(17, 17,{
-        message : "NID Length Must Be 17 ",
-    })
-    nid_number : string ;
+    @IsDateString({}, { message: 'Invalid Date Formate !! Date of birth must be in YYYY-MM-DD format' })
+    date_of_birth : Date ;
+
+}
+
+
+export class address_dto{
+    @IsNotEmpty()
+    @IsString()
+    @Matches(/^[A-Za-z\s]+$/, {
+    message: 'City must contain only alphabets',})
+    city : string
+
+    @IsNotEmpty()
+    @IsString()
+    @Matches(/^[A-Za-z\s]+$/, {
+    message: 'Country must contain only alphabets',})
+    country : string
+
+    @IsNotEmpty()
+    @Type(() => Number)
+    @IsNumber()
+    postal_code :  number ;
+
+    @IsNotEmpty()
+    @Type(() => Number)
+    @IsNumber()
+    street_no : number ;
+
+    @IsOptional()
+    @IsString()
+    street_name : string ; // defult value 'Unknown'
+
+
 
 }
