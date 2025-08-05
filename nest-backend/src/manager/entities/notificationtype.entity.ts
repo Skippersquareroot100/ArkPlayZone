@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Notification } from './notification.entity';
 
 @Entity()
 export class NotificationType {
@@ -10,4 +11,7 @@ export class NotificationType {
 
   @Column()
   reminder: string;
+
+  @ManyToOne(() => Notification, (notification) => notification.type)
+  notification: Notification;
 }

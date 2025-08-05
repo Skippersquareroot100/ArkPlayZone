@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { CustomerMembership } from 'src/customer/entities/customermembership.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 
 @Entity()
 export class PlanType {
@@ -10,4 +17,14 @@ export class PlanType {
 
   @Column()
   basic: string;
+
+  @ManyToOne(
+    () => CustomerMembership,
+    (customerMembership) => customerMembership.planType,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
+  @JoinColumn()
+  customerMembership: CustomerMembership;
 }

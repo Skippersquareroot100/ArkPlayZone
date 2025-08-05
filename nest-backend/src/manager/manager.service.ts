@@ -30,54 +30,49 @@ export class ManagerService {
     return await this.nameRepository.save(nameEntity);
   }
   async createStaff(data: StaffDto, photoFilename: string): Promise<void> {
-    const nameEntity = this.nameRepository.create({
-      firstName: data.firstName,
-      middleName: data.middleName,
-      lastName: data.lastName,
-    });
-    await this.nameRepository.save(nameEntity);
+    try {
+      console.log('Creating name entity...');
+      const nameEntity = this.nameRepository.create({
+        firstName: data.firstName,
+        middleName: data.middleName,
+        lastName: data.lastName,
+      });
+      await this.nameRepository.save(nameEntity);
+      console.log('Name saved:', nameEntity);
 
-    const streetEntity = this.streetRepository.create({
-      street_no: data.street_no,
-      street_name: data.street_name,
-      apartment_name: data.apartment_name,
-    });
-    await this.streetRepository.save(streetEntity);
+      const streetEntity = this.streetRepository.create({
+        street_no: data.street_no,
+        street_name: data.street_name,
+        apartment_name: data.apartment_name,
+      });
+      await this.streetRepository.save(streetEntity);
+      console.log('Street saved:', streetEntity);
 
-    const addressEntity = this.addressRepository.create({
-      city: data.city,
-      postal_code: data.postal_code,
-      street: streetEntity,
-    });
-    await this.addressRepository.save(addressEntity);
+      const addressEntity = this.addressRepository.create({
+        city: data.city,
+        postal_code: data.postal_code,
+        street: streetEntity,
+      });
+      await this.addressRepository.save(addressEntity);
+      console.log('Address saved:', addressEntity);
 
-    const staffEntity = this.staffRepository.create({
-      email: data.email,
-      phone: data.phone,
-      salary: data.salary,
-      deduction: data.deduction,
-      overtime: data.overtime,
-      role: data.role,
-      name: nameEntity,
-      address: addressEntity,
-      photo: photoFilename,
-      password: data.password,
-      incident_id: 1,
-      shift_id: 1,
-      activity_id: 1,
-    });
-    await this.staffRepository.save(staffEntity);
-    console.log(data.date);
-    console.log(data.facebook);
-  }
-  async getStaffPhoto(id: string): Promise<string> {
-    const staff = await this.staffRepository.findOne({
-      where: { staff_id: +id },
-      select: ['photo'],
-    });
-    if (!staff) {
-      throw new Error('Staff not found');
+      const staffEntity = this.staffRepository.create({
+        email: data.email,
+        phone: data.phone,
+        salary: data.salary,
+        deduction: data.deduction,
+        overtime: data.overtime,
+        role: data.role,
+        name: nameEntity,
+        address: addressEntity,
+        photo: photoFilename,
+        password: data.password,
+      });
+      await this.staffRepository.save(staffEntity);
+      console.log('Staff saved:', staffEntity);
+    } catch (error) {
+      console.error('Error creating staff:', error);
+      throw error;
     }
-    return staff.photo;
   }
 }

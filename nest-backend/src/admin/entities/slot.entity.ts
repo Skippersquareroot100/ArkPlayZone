@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Booking } from 'src/customer/entities/booking.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity()
 export class Slot {
@@ -13,4 +14,7 @@ export class Slot {
 
   @Column({ type: 'timestamp' })
   end_time: Date;
+
+  @OneToMany(() => Booking, (booking) => booking.slot, { onDelete: 'CASCADE' })
+  bookings: Booking[];
 }

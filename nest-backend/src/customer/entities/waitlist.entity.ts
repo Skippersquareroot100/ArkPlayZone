@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
+import { Customer } from './customer.entity';
 
 @Entity()
 export class Waitlist {
@@ -10,4 +11,7 @@ export class Waitlist {
 
   @Column({ type: 'varchar', length: 20 })
   priority: string;
+
+  @OneToOne(() => Customer, (customer) => customer.waitlist)
+  customer: Customer;
 }

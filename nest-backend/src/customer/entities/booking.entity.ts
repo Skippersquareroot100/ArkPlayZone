@@ -1,15 +1,18 @@
 import {
   Entity,
+  PrimaryGeneratedColumn,
   Column,
   ManyToOne,
   JoinColumn,
-  PrimaryGeneratedColumn,
+  OneToMany,
+  OneToOne,
 } from 'typeorm';
 import { Slot } from '../../admin/entities/slot.entity';
 import { Fine } from '../../employee/entities/fine.entity';
 import { Payment } from './payment.entity';
 import { Activity } from '../../admin/entities/activity.entity';
 import { Coupon } from '../../admin/entities/cupon.entity';
+import { Customer } from './customer.entity';
 
 @Entity()
 export class Booking {
@@ -22,38 +25,27 @@ export class Booking {
   @Column({ length: 50 })
   activity_type: string;
 
-  @Column()
-  slot_id: number;
-
-  @Column()
-  fine_id: number;
-
-  @Column()
-  cupon_id: number;
-
-  @Column()
-  activity_id: number;
-
-  @Column()
-  payment_id: number;
-
-  @ManyToOne(() => Slot)
+  @ManyToOne(() => Slot, (slot) => slot.bookings, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'slot_id' })
   slot: Slot;
 
-  @ManyToOne(() => Fine)
-  @JoinColumn({ name: 'fine_id' })
-  fine: Fine;
+  @OneToMany(() => Fine, (fine) => fine.booking)
+  fines: Fine[];
 
-  @ManyToOne(() => Coupon)
-  @JoinColumn({ name: 'cupon_id' })
-  coupon: Coupon;
+  @OneToMany(() => Coupon, (coupon) => coupon.booking)
+  coupons: Coupon[];
 
-  @ManyToOne(() => Activity)
-  @JoinColumn({ name: 'activity_id' })
+  @OneToOne(() => Activity, (activity) => activity.booking)
+  @JoinColumn()
   activity: Activity;
 
-  @ManyToOne(() => Payment)
-  @JoinColumn({ name: 'payment_id' })
+  @OneToOne(() => Payment, (payment) => payment.booking)
+  @JoinColumn()
   payment: Payment;
+
+  @ManyToOne(() => Customer, (customer) => customer.booking, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'customer_id' })
+  customer: Customer;
 }

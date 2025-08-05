@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
+import { Staff } from './staff.entity';
 
 @Entity()
 export class Shift {
@@ -13,4 +14,6 @@ export class Shift {
 
   @Column({ type: 'date' })
   dates: Date;
+  @ManyToMany(() => Staff, (staff) => staff.shifts)
+  staffs: Staff[];
 }

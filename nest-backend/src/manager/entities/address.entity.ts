@@ -4,8 +4,10 @@ import {
   ManyToOne,
   JoinColumn,
   PrimaryGeneratedColumn,
+  OneToOne,
 } from 'typeorm';
 import { Street } from './street.entity';
+import { Staff } from './staff.entity';
 
 @Entity()
 export class Address {
@@ -21,7 +23,12 @@ export class Address {
   @Column()
   st_id: number;
 
-  @ManyToOne(() => Street)
+  @OneToOne(() => Street, (street) => street.st_id, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'st_id' })
   street: Street;
+
+  @OneToOne(() => Staff, (staff) => staff.address)
+  staff: Staff;
 }

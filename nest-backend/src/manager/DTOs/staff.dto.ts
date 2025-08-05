@@ -1,12 +1,4 @@
-import {
-  IsDateString,
-  IsIn,
-  IsNotEmpty,
-  IsString,
-  IsUrl,
-  Matches,
-  MinLength,
-} from 'class-validator';
+import { IsNotEmpty, Matches, MinLength } from 'class-validator';
 
 export class StaffDto {
   @IsNotEmpty()
@@ -61,16 +53,4 @@ export class StaffDto {
       'Password must contain at least one lowercase letter and one special character (@, #, $, &)',
   })
   password: string;
-
-  @IsDateString({}, { message: 'Date must be a valid date string' })
-  date: string;
-
-  @IsUrl({}, { message: 'Must be a valid URL' })
-  facebook?: string;
-
-  /*@IsString()
-  @IsIn(['male', 'female'], {
-    message: 'Gender must be either male or female',
-  })
-  gender: string;*/
 }
