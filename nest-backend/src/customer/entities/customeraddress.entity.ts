@@ -1,11 +1,12 @@
 import {
   Entity,
   Column,
-  ManyToOne,
   JoinColumn,
   PrimaryGeneratedColumn,
+  OneToOne,
 } from 'typeorm';
 import { CustomerStreet } from './customerstreet.entity';
+import { Customer } from './customer.entity';
 
 @Entity()
 export class CustomerAddress {
@@ -18,10 +19,16 @@ export class CustomerAddress {
   @Column()
   postal_code: string;
 
-  @Column()
-  st_id: number;
-
-  @ManyToOne(() => CustomerStreet)
+  @OneToOne(
+    () => CustomerStreet,
+    (customerStreet) => customerStreet.customerAddresses,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
   @JoinColumn({ name: 'st_id' })
   street: CustomerStreet;
+
+  @OneToOne(() => Customer, (customer) => customer.address)
+  customer: Customer;
 }

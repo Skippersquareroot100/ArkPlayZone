@@ -4,6 +4,10 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  OneToOne,
+  OneToMany,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { Name } from './name.entity';
 import { Address } from './address.entity';
@@ -35,40 +39,35 @@ export class Staff {
   salary: number;
 
   @Column()
-  na_id: number;
-
-  @Column()
-  ad_id: number;
-
-  @Column()
-  incident_id: number;
-
-  @Column()
-  shift_id: number;
-
-  @Column()
-  activity_id: number;
-
-  @Column()
   photo: string;
 
-  @ManyToOne(() => Name)
+  @Column({ type: 'varchar', nullable: false })
+  password?: string;
+
+  @OneToOne(() => Name, (name) => name.staff, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'na_id' })
   name: Name;
 
-  @ManyToOne(() => Address)
+  @OneToOne(() => Address, (address) => address.staff, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'ad_id' })
   address: Address;
 
-  @ManyToOne(() => Incident)
-  @JoinColumn({ name: 'incident_id' })
-  incident: Incident;
+  @OneToMany(() => Incident, (incident) => incident.staff)
+  incidents: Incident[];
 
-  @ManyToOne(() => Shift)
-  @JoinColumn({ name: 'shift_id' })
-  shift: Shift;
+  @ManyToMany(() => Shift, (shift) => shift.staffs, {
+    onDelete: 'CASCADE',
+  })
+  @JoinTable({ name: 'staff_shifts' })
+  shifts: Shift[];
 
-  @ManyToOne(() => Activity)
+  @ManyToOne(() => Activity, (activity) => activity.staffs, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'activity_id' })
   activity: Activity;
 }

@@ -4,6 +4,8 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  OneToOne,
+  OneToMany,
 } from 'typeorm';
 import { CustomerName } from './customername.entity';
 import { CustomerAddress } from './customeraddress.entity';
@@ -27,73 +29,60 @@ export class Customer {
   @Column()
   phone: string;
 
-  @Column()
-  na_id: number;
-
-  @Column()
-  ad_id: number;
-
-  @Column()
-  booking_id: number;
-
-  @Column()
-  notification_id: number;
-
-  @Column()
-  review_id: number;
-
-  @Column()
-  waiver_id: number;
-
-  @Column()
-  profile_id: number;
-
-  @Column()
-  credid: number;
-
-  @Column()
-  membership_id: number;
-
-  @Column()
-  waitlist_id: number;
-
-  @ManyToOne(() => CustomerName)
+  @OneToOne(() => CustomerName, (customerName) => customerName.customer, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'na_id' })
   name: CustomerName;
 
-  @ManyToOne(() => CustomerAddress)
+  @OneToOne(
+    () => CustomerAddress,
+    (customerAddress) => customerAddress.customer,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
   @JoinColumn({ name: 'ad_id' })
   address: CustomerAddress;
 
-  @ManyToOne(() => Booking)
-  @JoinColumn({ name: 'booking_id' })
-  booking: Booking;
+  @OneToMany(() => Booking, (booking) => booking.customer, { cascade: true })
+  booking: Booking[];
 
-  @ManyToOne(() => Notification)
-  @JoinColumn({ name: 'notification_id' })
-  notification: Notification;
+  @OneToMany(() => Notification, (notification) => notification.customer, {
+    cascade: true,
+  })
+  notifications: Notification[];
 
-  @ManyToOne(() => CustomerReview)
-  @JoinColumn({ name: 'review_id' })
-  review: CustomerReview;
+  @OneToMany(() => CustomerReview, (review) => review.customer, {
+    cascade: true,
+  })
+  reviews: CustomerReview[];
 
-  @ManyToOne(() => Waiver)
-  @JoinColumn({ name: 'waiver_id' })
-  waiver: Waiver;
+  @OneToMany(() => Waiver, (waiver) => waiver.customer, {
+    cascade: true,
+  })
+  waivers: Waiver[];
 
-  @ManyToOne(() => CustomerProfile)
+  @OneToOne(() => CustomerProfile, (profile) => profile.customer, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'profile_id' })
   profile: CustomerProfile;
 
-  @ManyToOne(() => CustomerCredentials)
+  @OneToOne(() => CustomerCredentials, (credentials) => credentials.customer, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'credid' })
   credentials: CustomerCredentials;
 
-  @ManyToOne(() => CustomerMembership)
-  @JoinColumn({ name: 'membership_id' })
-  membership: CustomerMembership;
+  @OneToMany(() => CustomerMembership, (membership) => membership.customer, {
+    cascade: true,
+  })
+  memberships: CustomerMembership[];
 
-  @ManyToOne(() => Waitlist)
+  @OneToOne(() => Waitlist, (waitlist) => waitlist.customer, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'waitlist_id' })
   waitlist: Waitlist;
 }

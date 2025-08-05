@@ -4,8 +4,10 @@ import {
   ManyToOne,
   JoinColumn,
   PrimaryGeneratedColumn,
+  OneToMany,
 } from 'typeorm';
 import { PlanType } from '../../manager/entities/plantype.entity';
+import { Customer } from './customer.entity';
 
 @Entity()
 export class CustomerMembership {
@@ -15,10 +17,10 @@ export class CustomerMembership {
   @Column({ length: 200 })
   benefits: string;
 
-  @Column()
-  ptype_id: number;
+  @OneToMany(() => PlanType, (planType) => planType.customerMembership)
+  planType: PlanType[];
 
-  @ManyToOne(() => PlanType)
-  @JoinColumn({ name: 'ptype_id' })
-  planType: PlanType;
+  @ManyToOne(() => Customer, (customer) => customer.memberships)
+  @JoinColumn({ name: 'customer_id' })
+  customer: Customer;
 }

@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Customer } from './customer.entity';
 @Entity()
 export class CustomerName {
   @PrimaryGeneratedColumn()
@@ -12,4 +13,7 @@ export class CustomerName {
 
   @Column()
   lastName: string;
+
+  @OneToOne(() => Customer, (customer) => customer.name)
+  customer: Customer;
 }

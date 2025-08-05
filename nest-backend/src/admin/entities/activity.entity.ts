@@ -4,12 +4,18 @@ import {
   ManyToOne,
   JoinColumn,
   PrimaryGeneratedColumn,
+  ManyToMany,
+  JoinTable,
+  OneToMany,
+  OneToOne,
 } from 'typeorm';
 import { ActivityType } from './activitytype.entity';
 import { Location } from './location.entity';
 import { Category } from './category.entiy';
 import { Room } from './room.entity';
 import { CustomerReview } from '../../customer/entities/customerreview.entity';
+import { Booking } from 'src/customer/entities/booking.entity';
+import { Staff } from 'src/manager/entities/staff.entity';
 @Entity()
 export class Activity {
   @PrimaryGeneratedColumn()
@@ -18,38 +24,41 @@ export class Activity {
   @Column({ length: 100 })
   name: string;
 
-  @Column()
-  acttype_id: number;
 
-  @Column()
-  location_id: number;
-
-  @Column()
-  cat_id: number;
-
-  @Column()
-  review_id: number;
-
-  @Column()
-  room_id: number;
-
-  @ManyToOne(() => ActivityType)
+  @ManyToOne(() => ActivityType, (activityType) => activityType.activities, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'acttype_id' })
   activityType: ActivityType;
 
-  @ManyToOne(() => Location)
+  @ManyToOne(() => Location, (location) => location.activities, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'location_id' })
   location: Location;
 
-  @ManyToOne(() => Category)
-  @JoinColumn({ name: 'cat_id' })
-  category: Category;
+  @ManyToMany(() => Category, (category) => category.activities)
+  @JoinTable({
+    name: 'activity_categories',
+    joinColumn: { name: 'activity_id', referencedColumnName: 'activity_id' },
+    inverseJoinColumn: { name: 'cat_id', referencedColumnName: 'cat_id' },
+  })
+  categories: Category[];
 
-  @ManyToOne(() => CustomerReview)
-  @JoinColumn({ name: 'review_id' })
-  review: CustomerReview;
+  @OneToMany(() => CustomerReview, (review) => review.activity)
+  reviews: CustomerReview[];
 
-  @ManyToOne(() => Room)
+  @ManyToOne(() => Room, (room) => room.activities, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'room_id' })
   room: Room;
+
+  @OneToOne(() => Booking, (booking) => booking.activity)
+  booking: Booking;
+
+  @OneToMany(() => Staff, (staff) => staff.activity, {
+    onDelete: 'CASCADE',
+  })
+  staffs: Staff[];
 }

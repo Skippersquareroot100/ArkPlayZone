@@ -4,9 +4,11 @@ import {
   ManyToOne,
   JoinColumn,
   PrimaryGeneratedColumn,
+  OneToOne,
 } from 'typeorm';
 import { PaymentMethod } from '../../admin/entities/paymentmethod.entity';
 import { PaymentStatus } from '../../admin/entities/paymentstatus.entity';
+import { Booking } from './booking.entity';
 
 @Entity()
 export class Payment {
@@ -29,4 +31,8 @@ export class Payment {
   @ManyToOne(() => PaymentStatus)
   @JoinColumn({ name: 'status_id' })
   status: PaymentStatus;
+
+  @OneToOne(() => Booking, (booking) => booking.payment)
+  @JoinColumn()
+  booking: Booking;
 }

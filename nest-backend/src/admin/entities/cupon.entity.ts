@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Booking } from 'src/customer/entities/booking.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Coupon {
@@ -19,4 +20,9 @@ export class Coupon {
 
   @Column({ type: 'date' })
   valid_until: Date;
+
+  @ManyToOne(() => Booking, (booking) => booking.coupons, {
+    onDelete: 'CASCADE',
+  })
+  booking: Booking;
 }

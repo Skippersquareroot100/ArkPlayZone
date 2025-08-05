@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from 'typeorm';
+import { Customer } from './customer.entity';
 
 @Entity()
 export class CustomerCredentials {
@@ -13,4 +14,6 @@ export class CustomerCredentials {
 
   @Column()
   profile_photo: string;
+  @OneToOne(() => Customer, (customer) => customer.credentials)
+  customer: Customer;
 }

@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Activity } from './activity.entity';
 
 @Entity()
 export class ActivityType {
@@ -13,4 +14,7 @@ export class ActivityType {
 
   @Column({ length: 50 })
   mixed: string;
+
+  @OneToMany(() => Activity, (activity) => activity.activityType)
+  activities: Activity[];
 }

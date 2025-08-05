@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Staff } from './staff.entity';
 @Entity()
 export class Name {
   @PrimaryGeneratedColumn()
@@ -12,4 +13,9 @@ export class Name {
 
   @Column()
   lastName: string;
+
+  @OneToOne(() => Staff, (staff) => staff.staff_id, {
+    onDelete: 'CASCADE',
+  })
+  staff: Staff;
 }

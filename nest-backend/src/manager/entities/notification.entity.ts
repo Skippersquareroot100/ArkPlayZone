@@ -4,8 +4,10 @@ import {
   ManyToOne,
   JoinColumn,
   PrimaryGeneratedColumn,
+  OneToMany,
 } from 'typeorm';
 import { NotificationType } from './notificationtype.entity';
+import { Customer } from 'src/customer/entities/customer.entity';
 @Entity()
 export class Notification {
   @PrimaryGeneratedColumn()
@@ -17,7 +19,16 @@ export class Notification {
   @Column()
   nottype_id: number;
 
-  @ManyToOne(() => NotificationType)
-  @JoinColumn({ name: 'nottype_id' })
-  type: NotificationType;
+  @OneToMany(
+    () => NotificationType,
+    (notificationType) => notificationType.nottype_id,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
+  type: NotificationType[];
+
+  @ManyToOne(() => Customer, (customer) => customer.notifications)
+  @JoinColumn({ name: 'customer_id' })
+  customer: Customer;
 }

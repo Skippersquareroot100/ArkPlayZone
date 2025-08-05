@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Activity } from './activity.entity';
 
 @Entity()
 export class Location {
@@ -10,4 +11,6 @@ export class Location {
 
   @Column({ length: 10 })
   floor: string;
+  @OneToMany(() => Activity, (activity) => activity.location)
+  activities: Activity[];
 }

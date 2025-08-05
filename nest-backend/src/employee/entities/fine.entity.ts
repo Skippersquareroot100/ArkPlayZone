@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { FineType } from '../../admin/entities/finetype.entity';
-import { Customer } from 'src/customer/entities/customer.entity';
+import { Booking } from 'src/customer/entities/booking.entity';
 
 @Entity()
 export class Fine {
@@ -22,4 +22,7 @@ export class Fine {
   @ManyToOne(() => FineType)
   @JoinColumn({ name: 'finetype_id' })
   fineType: FineType;
+
+  @ManyToOne(() => Booking, (booking) => booking.fines)
+  booking: Booking;
 }

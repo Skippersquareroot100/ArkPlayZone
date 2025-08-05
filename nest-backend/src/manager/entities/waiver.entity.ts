@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Customer } from 'src/customer/entities/customer.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity()
 export class Waiver {
@@ -10,4 +11,6 @@ export class Waiver {
 
   @Column()
   medical_condition: string;
+  @ManyToOne(() => Customer, (customer) => customer.waivers)
+  customer: Customer;
 }
