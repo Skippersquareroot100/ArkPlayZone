@@ -56,6 +56,14 @@ export class ManagerService {
       await this.addressRepository.save(addressEntity);
       console.log('Address saved:', addressEntity);
 
+      const activityEntity = await this.activityRepository.findOne({
+        where: { activity_id: 1 },
+      });
+
+      if (!activityEntity) {
+        throw new Error('Activity with ID 1 not found');
+      }
+
       const staffEntity = this.staffRepository.create({
         email: data.email,
         phone: data.phone,
@@ -67,6 +75,7 @@ export class ManagerService {
         address: addressEntity,
         photo: photoFilename,
         password: data.password,
+        activity: activityEntity,
       });
       await this.staffRepository.save(staffEntity);
       console.log('Staff saved:', staffEntity);
