@@ -7,10 +7,14 @@ import {
   UploadedFile,
   UseInterceptors,
   Post,
+  UsePipes,
+  ValidationPipe,
+  Body,
 } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage, MulterError } from 'multer';
+import { customer_dto } from './customer.dto';
 
 @Controller('customer')
 export class CustomerController {
@@ -34,26 +38,32 @@ export class CustomerController {
     return `User with ID: ${id}`;
   }
 
-  @Post('upload')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      fileFilter: (req, file, cb) => {
-        if (file.originalname.match(/^.*\.(jpg|webp|png|jpeg)$/))
-          cb(null, true);
-        else {
-          cb(new MulterError('LIMIT_UNEXPECTED_FILE', 'image'), false);
-        }
-      },
-      limits: { fileSize: 1000000 },
-      storage: diskStorage({
-        destination: './uploads',
-        filename: function (req, file, cb) {
-          cb(null, Date.now() + file.originalname);
+  // register a customer
+  @Post('register')
+    @UsePipes(new ValidationPipe())
+    @UseInterceptors(FileInterceptor('file',{
+        fileFilter : (req,file,cb)=>{
+            if(file.originalname.match(/^.*\.(jpg|JPG|webp|png|jpeg)$/)){
+                cb(null,true);
+            }else{
+                cb(new MulterError('LIMIT_UNEXPECTED_FILE','image'),false);
+            }
         },
-      }),
-    }),
-  )
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
-    console.log(file);
-  }
+        limits:{ fileSize : 2*1024*1024},
+        storage : diskStorage({
+            destination : './uploads',
+            filename : function(req,file,cb){
+                cb(null,Date.now()+"_"+file.originalname)
+            },
+        
+        })
+    }))
+        async register_customer(
+            @Body() customer_dto : customer_dto,
+            @UploadedFile() file : Express.Multer.File){
+            return await this.customerService.register_customer(customer_dto, file);
+            
+    }
+
+  
 }

@@ -6,8 +6,8 @@ export class CustomerStreet {
   @PrimaryGeneratedColumn()
   st_id: number;
 
-  @Column()
-  street_no: string;
+  @Column({type : 'int'})
+  street_no: number;
 
   @Column()
   street_name: string;

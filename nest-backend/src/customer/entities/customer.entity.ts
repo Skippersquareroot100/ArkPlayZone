@@ -45,21 +45,27 @@ export class Customer {
   @JoinColumn({ name: 'ad_id' })
   address: CustomerAddress;
 
-  @OneToMany(() => Booking, (booking) => booking.customer, { cascade: true })
+  @OneToMany(() => Booking, (booking) => booking.customer, { 
+    cascade: true, 
+    nullable: true,
+  })
   booking: Booking[];
 
   @OneToMany(() => Notification, (notification) => notification.customer, {
     cascade: true,
+    nullable: true,
   })
   notifications: Notification[];
 
   @OneToMany(() => CustomerReview, (review) => review.customer, {
     cascade: true,
+    nullable: true,
   })
   reviews: CustomerReview[];
 
   @OneToMany(() => Waiver, (waiver) => waiver.customer, {
     cascade: true,
+    nullable: true,
   })
   waivers: Waiver[];
 
@@ -77,12 +83,14 @@ export class Customer {
 
   @OneToMany(() => CustomerMembership, (membership) => membership.customer, {
     cascade: true,
+    nullable : true,
   })
   memberships: CustomerMembership[];
 
   @OneToOne(() => Waitlist, (waitlist) => waitlist.customer, {
     onDelete: 'CASCADE',
+    nullable: true,
   })
-  @JoinColumn({ name: 'waitlist_id' })
-  waitlist: Waitlist;
+  @JoinColumn({ name: 'waitlist_id'})
+  waitlist: Waitlist | null;
 }

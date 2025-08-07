@@ -16,8 +16,8 @@ export class CustomerAddress {
   @Column()
   city: string;
 
-  @Column()
-  postal_code: string;
+  @Column({type : 'int'})
+  postal_code: number;
 
   @OneToOne(
     () => CustomerStreet,

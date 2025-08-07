@@ -9,7 +9,7 @@ export class CustomerProfile {
   @Column()
   loyality_points: number;
 
-  @Column()
+  @Column({nullable: true})
   achivement: string;
 
   @OneToOne(() => Customer, (customer) => customer.profile)
