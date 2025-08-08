@@ -15,10 +15,13 @@ import { CustomerService } from './customer.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage, MulterError } from 'multer';
 import { customer_dto } from './customer.dto';
+import { MailService } from '../mailer/mailer.service';
 
 @Controller('customer')
 export class CustomerController {
-  constructor(private readonly customerService: CustomerService) {}
+  constructor(private readonly customerService: CustomerService ,
+    private readonly mail_service : MailService
+  ) {}
   @Get('dashboard')
   getDashboard(): string {
     return this.customerService.getDashboard();
@@ -37,7 +40,10 @@ export class CustomerController {
     console.log(typeof id);
     return `User with ID: ${id}`;
   }
-
+  @Post('test')
+  test_email(@Body('email') email : string){
+     return this.mail_service.send_email_with_text(email, 'Test Subject', 'This is a test email');
+  }
   // register a customer
   @Post('register')
     @UsePipes(new ValidationPipe())
@@ -64,6 +70,21 @@ export class CustomerController {
             return await this.customerService.register_customer(customer_dto, file);
             
     }
+    @Post('verify')
+    async verify_customer(
+        @Body() otp_data: string,
+  
+    ) {
+        const  resp = await this.customerService.verify_customer(otp_data['otp_signature'], otp_data['otp']);
+        return {
+            otp_sig : otp_data['otp_signature'],
+            otp : otp_data['otp'],
+            resp : resp
+            
+        };
+        
+    }
+
 
   
 }

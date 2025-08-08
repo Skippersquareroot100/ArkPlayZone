@@ -14,6 +14,9 @@ import { Payment } from './entities/payment.entity';
 import { Waitlist } from './entities/waitlist.entity';
 import { Booking } from './entities/booking.entity';
 import { Customer } from './entities/customer.entity';
+import { MailModule } from 'src/mailer/mailer.module';
+import { customer_otp } from './entities/cutomerOTP.entity';
+import { CustomerOtpModule } from './customer_otp/customer_otp.module';
 
 @Module({
   imports: [
@@ -30,9 +33,13 @@ import { Customer } from './entities/customer.entity';
       Waitlist,
       Booking,
       Customer,
+      customer_otp
     ]),
+    MailModule,
+    CustomerOtpModule,
   ],
   controllers: [CustomerController],
   providers: [CustomerService],
+  exports: [TypeOrmModule]
 })
 export class CustomerModule {}

@@ -8,6 +8,8 @@ import { CustomerProfile} from './entities/customerprofile.entity'
 import { CustomerCredentials} from './entities/customercredentials.entity'
 import { Customer } from './entities/customer.entity';
 import { Repository } from 'typeorm';
+import { customer_otp } from './entities/cutomerOTP.entity';
+import { CustomerOtpService } from './customer_otp/customer_otp.service';
 
 @Injectable()
 export class CustomerService {
@@ -24,6 +26,9 @@ export class CustomerService {
     private credential_repository : Repository<CustomerCredentials>,
     @InjectRepository(Customer)
     private customer_repository: Repository<Customer>,
+    @InjectRepository(customer_otp)
+    private customer_otp_repository: Repository<customer_otp>,
+    private readonly otp_service: CustomerOtpService,
   ) {}
   getDashboard(): string {
     return 'Customer Dashboard';
@@ -75,6 +80,33 @@ export class CustomerService {
         profile: profile,
         credentials: credentials,
     });
-    return await this.customer_repository.save(customer);
+    
+    const new_customer = await this.customer_repository.save(customer);
+    const otp_resp = await this.otp_service.send_otp(new_customer.email);
+    if((otp_resp).status === 'success'){
+      const new_otp = this.customer_otp_repository.create({
+        customer_id: new_customer,
+        otp_key : otp_resp.otp,
+      })
+      const otp_entry = await this.customer_otp_repository.save(new_otp);
+
+      return{
+        status: 'success',
+        message: 'Customer registered successfully,Plaease verify your email',
+        otp_signature: otp_entry.otp_signature,
+      }
+        
+    }else{
+      return {
+        status: 'error',
+        message: 'Failed to send OTP',
+      };
+    }
+
+  }
+
+  async verify_customer(otp_signature : string , otp : number){
+    const resp =  await this.otp_service.verify_otp(otp_signature,otp);
+    return resp;
   }
 }

@@ -4,6 +4,7 @@ import { EmployeeModule } from './employee/employee.module';
 import { ManagerModule } from './manager/manager.module';
 import { CustomerModule } from './customer/customer.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MailModule } from './mailer/mailer.module';
 
 @Module({
   imports: [
@@ -13,14 +14,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     CustomerModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5433,
+      host: '159.65.245.108',
+      port: 5432,
       username: 'postgres',
       password: '12345',
       database: 'ArkPlayZone',
       autoLoadEntities: true,
       synchronize: true,
     }),
+    MailModule,
   ],
 })
 export class AppModule {}
