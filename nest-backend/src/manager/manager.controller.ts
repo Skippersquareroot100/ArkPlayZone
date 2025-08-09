@@ -19,12 +19,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class ManagerController {
   constructor(private readonly managerService: ManagerService) {}
 
-  @Post('create-name')
-  @UsePipes(new ValidationPipe())
-  createName(@Body() data: NameDto) {
-    this.managerService.createName(data);
-  }
-
   @Get('hello')
   getHello(): string {
     return 'Hello from ManagerController!';
