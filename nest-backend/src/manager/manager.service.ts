@@ -9,6 +9,7 @@ import { Street } from './entities/street.entity';
 import { StaffDto } from './DTOs/staff.dto';
 import { Shift } from './entities/shift.entity';
 import { Activity } from 'src/admin/entities/activity.entity';
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class ManagerService {
   constructor(
@@ -31,6 +32,12 @@ export class ManagerService {
   }
   async createStaff(data: StaffDto, photoFilename: string): Promise<void> {
     try {
+      if (
+        await this.staffRepository.findOne({ where: { email: data.email } })
+      ) {
+        throw new Error('Email already exists');
+      }
+
       console.log('Creating name entity...');
       const nameEntity = this.nameRepository.create({
         firstName: data.firstName,
@@ -53,8 +60,12 @@ export class ManagerService {
         postal_code: data.postal_code,
         street: streetEntity,
       });
+
       await this.addressRepository.save(addressEntity);
       console.log('Address saved:', addressEntity);
+
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(data.password, saltRounds);
 
       const staffEntity = this.staffRepository.create({
         email: data.email,
@@ -66,7 +77,7 @@ export class ManagerService {
         name: nameEntity,
         address: addressEntity,
         photo: photoFilename,
-        password: data.password,
+        password: hashedPassword,
       });
       await this.staffRepository.save(staffEntity);
       console.log('Staff saved:', staffEntity);

@@ -29,7 +29,7 @@ export class Staff {
   @Column({ type: 'varchar', length: 50 })
   role: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
@@ -55,7 +55,7 @@ export class Staff {
   })
   @JoinColumn({ name: 'ad_id' })
   address: Address;
-
+ 
   @OneToMany(() => Incident, (incident) => incident.staff)
   incidents: Incident[];
 
@@ -67,7 +67,8 @@ export class Staff {
 
   @ManyToOne(() => Activity, (activity) => activity.staffs, {
     onDelete: 'CASCADE',
+    nullable: true,
   })
-  @JoinColumn({ name: 'activity_id' })
+  @JoinColumn({ name: 'activity_id'})
   activity: Activity;
 }
