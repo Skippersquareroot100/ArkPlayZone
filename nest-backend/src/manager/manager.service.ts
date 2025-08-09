@@ -1,4 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  ConflictException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { NameDto } from './DTOs/name.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -10,6 +15,7 @@ import { StaffDto } from './DTOs/staff.dto';
 import { Shift } from './entities/shift.entity';
 import { Activity } from 'src/admin/entities/activity.entity';
 import * as bcrypt from 'bcrypt';
+import { RegMailerService } from './regMailer.service';
 @Injectable()
 export class ManagerService {
   constructor(
@@ -25,6 +31,7 @@ export class ManagerService {
     private readonly shiftRepository: Repository<Shift>,
     @InjectRepository(Activity)
     private readonly activityRepository: Repository<Activity>,
+    private readonly regMailerService: RegMailerService,
   ) {}
   async createName(data: NameDto): Promise<Name> {
     const nameEntity = this.nameRepository.create(data);
@@ -35,7 +42,7 @@ export class ManagerService {
       if (
         await this.staffRepository.findOne({ where: { email: data.email } })
       ) {
-        throw new Error('Email already exists');
+        throw new ConflictException('Email already exists');
       }
 
       console.log('Creating name entity...');
@@ -80,10 +87,18 @@ export class ManagerService {
         password: hashedPassword,
       });
       await this.staffRepository.save(staffEntity);
+      console.log('Staff created:', staffEntity);
+      await this.regMailerService.sendRegistrationEmail(
+        data.email,
+        data.lastName,
+      );
       console.log('Staff saved:', staffEntity);
     } catch (error) {
       console.error('Error creating staff:', error);
-      throw error;
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to create staff');
     }
   }
 }
