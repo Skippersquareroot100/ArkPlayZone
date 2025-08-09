@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { ManagerService } from './manager.service';
 import { NameDto } from './DTOs/name.dto';
-
 import { StaffDto } from './DTOs/staff.dto';
 import { Response } from 'express';
 import { diskStorage, MulterError } from 'multer';
@@ -60,12 +59,14 @@ export class ManagerController {
     @Body() dto: StaffDto,
   ) {
     try {
-      // If a file was uploaded, override dto.file with actual filename
       if (file) {
         dto.file = file.filename;
       }
 
-      return await this.managerService.createStaff(dto, dto.file ?? '');
+      await this.managerService.createStaff(dto, dto.file ?? '');
+      return {
+        message: 'Staff created successfully',
+      };
     } catch (e) {
       console.log('Validation Error:', e);
       throw e;

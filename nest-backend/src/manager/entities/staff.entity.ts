@@ -67,7 +67,8 @@ export class Staff {
 
   @ManyToOne(() => Activity, (activity) => activity.staffs, {
     onDelete: 'CASCADE',
+    nullable: true,
   })
-  @JoinColumn({ name: 'activity_id' })
+  @JoinColumn({ name: 'activity_id'})
   activity: Activity;
 }
