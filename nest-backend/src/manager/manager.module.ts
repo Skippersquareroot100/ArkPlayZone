@@ -16,6 +16,11 @@ import { Staff } from './entities/staff.entity';
 import { Activity } from 'src/admin/entities/activity.entity';
 import { RegMailerService } from './regMailer.service';
 import { MailModule } from 'src/mailer/mailer.module';
+import { Loginservice } from './login.service';
+import { AuthService } from 'src/auth/auth.service';
+import { AuthModule } from 'src/auth/auth.module';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
+import { RefreshTokenService } from './refreshToken.service';
 
 @Module({
   imports: [
@@ -35,8 +40,15 @@ import { MailModule } from 'src/mailer/mailer.module';
       Staff,
     ]),
     MailModule,
+    AuthModule,
   ],
   controllers: [ManagerController],
-  providers: [RegMailerService, ManagerService],
+  providers: [
+    RegMailerService,
+    ManagerService,
+    Loginservice,
+    JwtAuthGuard,
+    RefreshTokenService,
+  ],
 })
 export class ManagerModule {}
