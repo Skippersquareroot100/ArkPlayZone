@@ -14,8 +14,8 @@ import { MailModule } from './mailer/mailer.module';
     CustomerModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: '159.65.245.108',
-      port: 5432,
+      host: 'localhost',
+      port: 5433,
       username: 'postgres',
       password: '12345',
       database: 'ArkPlayZone',
