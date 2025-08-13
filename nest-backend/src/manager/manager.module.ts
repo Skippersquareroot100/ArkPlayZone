@@ -14,6 +14,8 @@ import { Shift } from './entities/shift.entity';
 import { Supplier } from './entities/supplier.entity';
 import { Staff } from './entities/staff.entity';
 import { Activity } from 'src/admin/entities/activity.entity';
+import { RegMailerService } from './regMailer.service';
+import { MailModule } from 'src/mailer/mailer.module';
 
 @Module({
   imports: [
@@ -32,8 +34,9 @@ import { Activity } from 'src/admin/entities/activity.entity';
       Equipment,
       Staff,
     ]),
+    MailModule,
   ],
   controllers: [ManagerController],
-  providers: [ManagerService],
+  providers: [RegMailerService, ManagerService],
 })
 export class ManagerModule {}

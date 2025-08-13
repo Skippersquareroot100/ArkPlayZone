@@ -1,4 +1,11 @@
-import { IsNotEmpty, Matches, MinLength } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  Matches,
+  MinLength,
+} from 'class-validator';
 
 export class StaffDto {
   @IsNotEmpty()
@@ -6,8 +13,10 @@ export class StaffDto {
     message: 'First name is required and must contain only letters',
   })
   firstName: string;
-  @Matches(/^[a-zA-Z]+$/, { message: 'Middle name must contain only letters' })
+
+  @IsOptional()
   middleName?: string;
+
   @IsNotEmpty()
   @Matches(/^[a-zA-Z]+$/, {
     message: 'Last name is required and must contain only letters',
@@ -16,22 +25,27 @@ export class StaffDto {
 
   @IsNotEmpty({ message: 'Street number is required' })
   street_no: string;
+
   @IsNotEmpty({ message: 'Street name is required' })
   street_name: string;
+
   @IsNotEmpty({ message: 'Apartment name is required' })
   apartment_name: string;
 
   @IsNotEmpty({ message: 'City is required' })
   city: string;
-  @IsNotEmpty({ message: 'State is required' })
-  state: string;
+
   @IsNotEmpty({ message: 'Postal code is required' })
   postal_code: string;
 
-  @IsNotEmpty({ message: 'Deduction is required' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
   deduction: number;
 
-  @IsNotEmpty({ message: 'Overtime is required' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
   overtime: number;
 
   @IsNotEmpty({ message: 'Role is required' })
@@ -43,8 +57,12 @@ export class StaffDto {
   @IsNotEmpty({ message: 'Phone number is required' })
   @Matches(/^01\d{8,9}$/, { message: 'Phone number must start with 01' })
   phone: string;
-  @IsNotEmpty({ message: 'Salary is required' })
-  salary: number;
+
+  @IsOptional()
+  salary: number = 10000;
+
+  @IsOptional()
+  file?: string;
 
   @IsNotEmpty({ message: 'Password is required' })
   @MinLength(6, { message: 'Password must be at least 6 characters long' })
