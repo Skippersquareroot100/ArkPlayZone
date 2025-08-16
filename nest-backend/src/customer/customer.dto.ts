@@ -52,7 +52,7 @@ export class customer_dto{
     message: 'Phone number must contain only numbers',
     })
     @Length(11,11,{
-        message : "Phone number must be 14 digits ",
+        message : "Phone number must be 11 digits ",
     })
     phone_number: string;
 

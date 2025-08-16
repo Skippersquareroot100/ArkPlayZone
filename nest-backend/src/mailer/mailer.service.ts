@@ -34,4 +34,8 @@ export class MailService {
       message: 'Email sent successfully',
     };
   }
+    reset_password_body = `<div style="font-family: Arial, sans-serif; padding: 20px; text-align: center;">
+  <p>Your password has been changed successfully.</p>
+  <p>If this was not you, please reset your password immediately or contact support.</p>
+</div>`
 }
