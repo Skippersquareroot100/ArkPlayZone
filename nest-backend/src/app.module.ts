@@ -16,7 +16,6 @@ import { MailModule } from './mailer/mailer.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
-      // host: '159.65.245.108',
       port: 5432,
       username: 'postgres',
       password: '12345',
