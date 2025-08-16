@@ -21,6 +21,11 @@ import { AuthService } from 'src/auth/auth.service';
 import { AuthModule } from 'src/auth/auth.module';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 import { RefreshTokenService } from './refreshToken.service';
+import { StaffOTP } from './entities/staffOTP.entity';
+import { StaffFinancial } from './entities/staffFinancial.entity';
+import { StaffOTPService } from './staffOTP.service';
+import { PassResetService } from './passReset.service';
+import { ManagerPATCHController } from './controllers/managerPATCH.controller';
 
 @Module({
   imports: [
@@ -38,17 +43,21 @@ import { RefreshTokenService } from './refreshToken.service';
       Supplier,
       Equipment,
       Staff,
+      StaffOTP,
+      StaffFinancial,
     ]),
     MailModule,
     AuthModule,
   ],
-  controllers: [ManagerController],
+  controllers: [ManagerController, ManagerPATCHController],
   providers: [
     RegMailerService,
     ManagerService,
     Loginservice,
     JwtAuthGuard,
     RefreshTokenService,
+    StaffOTPService,
+    PassResetService,
   ],
 })
 export class ManagerModule {}

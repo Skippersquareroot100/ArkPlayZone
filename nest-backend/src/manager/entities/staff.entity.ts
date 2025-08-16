@@ -14,6 +14,8 @@ import { Address } from './address.entity';
 import { Incident } from '../../employee/entities/incedent.entity';
 import { Shift } from './shift.entity';
 import { Activity } from '../../admin/entities/activity.entity';
+import { StaffOTP } from './staffOTP.entity';
+import { StaffFinancial } from './staffFinancial.entity';
 
 @Entity()
 export class Staff {
@@ -71,4 +73,13 @@ export class Staff {
   })
   @JoinColumn({ name: 'activity_id'})
   activity: Activity;
+
+   @OneToOne(() => StaffOTP, (otp) => otp.staff, {
+     cascade: true,
+   })
+   otp: StaffOTP;
+  @OneToMany(() => StaffFinancial, (financial) => financial.staff, {
+    cascade: true,
+  })
+  financialRecords: StaffFinancial[];
 }

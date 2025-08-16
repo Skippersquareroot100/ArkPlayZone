@@ -6,6 +6,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  Patch,
   Post,
   UploadedFile,
   UseGuards,
@@ -23,6 +24,11 @@ import { StaffLoginDTO } from './DTOs/stafflogin.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 import { TokenRequestDTO } from './DTOs/requestToken.dto';
 import { RefreshTokenService } from './refreshToken.service';
+import { Staff } from 'src/manager/entities/staff.entity';
+import { StaffOTPService } from './staffOTP.service';
+import { VerifyOTPDTO } from './DTOs/verifyOTP.dto';
+import { UpdatePasswordDTO } from './DTOs/updatePass.dto';
+import { PassResetService } from './passReset.service';
 
 @Controller('manager')
 export class ManagerController {
@@ -30,6 +36,8 @@ export class ManagerController {
     private readonly managerService: ManagerService,
     private readonly loginservice: Loginservice,
     private readonly refreshTokenService: RefreshTokenService,
+    private readonly staffOTPService: StaffOTPService,
+    private readonly passResetService: PassResetService,
   ) {}
 
   @Get('hello')
@@ -138,5 +146,44 @@ export class ManagerController {
         error.status || HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  @UsePipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  )
+  @Post('forget-pass')
+  async forgetPassword(@Body() data: TokenRequestDTO) {
+    console.log('Generating OTP for:', data.email);
+    await this.staffOTPService.generateOTP(data);
+    return { message: 'OTP generated' };
+  }
+
+  @UsePipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  )
+  @Post('OTP-verify')
+  async verifyOTP(@Body() data: VerifyOTPDTO) {
+    await this.staffOTPService.validateOTP(data);
+    return { message: 'OTP verified successfully' };
+  }
+  @UsePipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  )
+  @Patch('update-pass')
+  async updatePassword(@Body() data: UpdatePasswordDTO) {
+    await this.passResetService.resetPass(data);
+    return { message: 'Password updated successfully' };
   }
 }
