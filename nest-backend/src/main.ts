@@ -9,6 +9,6 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
-  await app.listen(process.env.PORT ?? 10000, '0.0.0.0');
+  await app.listen(process.env.PORT ?? 4000, '0.0.0.0');
 }
 bootstrap();

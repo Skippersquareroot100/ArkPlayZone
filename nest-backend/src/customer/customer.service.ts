@@ -11,6 +11,7 @@ import { Repository } from 'typeorm';
 import { customer_otp } from './entities/cutomerOTP.entity';
 import { CustomerOtpService } from './customer_otp/customer_otp.service';
 import { MailService } from 'src/mailer/mailer.service';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class CustomerService {
@@ -31,6 +32,7 @@ export class CustomerService {
     @InjectRepository(customer_otp)
     private customer_otp_repository: Repository<customer_otp>,
     private readonly otp_service: CustomerOtpService,
+    private readonly auth_service : AuthService,
   ) { }
   getDashboard(): string {
     return 'Customer Dashboard';
@@ -48,6 +50,7 @@ export class CustomerService {
     customer_dto: customer_dto,
     file?: Express.Multer.File,
   ) {
+    const hashed_password = await this.auth_service.hash_password(customer_dto.password)
     const new_street = this.street_repository.create({
       street_no: customer_dto.street_no,
       street_name: customer_dto.street_name,
@@ -75,7 +78,7 @@ export class CustomerService {
 
     const credentials = await this.credential_repository.save(
       this.credential_repository.create({
-        password: customer_dto.password,
+        password: hashed_password,
         username: customer_dto.username,
         profile_photo: file?.path || './media/default_profile_photo.png',
       }),
@@ -144,7 +147,7 @@ export class CustomerService {
         message: 'Invalid email',
       };
     }
-    if (password === resp.credentials.password) {
+    if (await this.auth_service.compare_password(password,resp.credentials.password)) {
       const body = this.otp_service.welcome_body;
       this.mailService.send_email_with_html(
         resp.email,
@@ -219,10 +222,10 @@ export class CustomerService {
       };
     }
     //console.log('new password : ' + new_password)
-
+    const hashed_password = await this.auth_service.hash_password(new_password);
     await this.credential_repository.update(
       { credid: customer.customer_id.credentials.credid },
-      { password: new_password },
+      { password: hashed_password },
     );
     this.mailService.send_email_with_html(
       customer.customer_id.email,
@@ -270,29 +273,20 @@ export class CustomerService {
     customer.email = customer_dto.email ?? customer.email;
     customer.phone = customer_dto.phone_number ?? customer.phone;
 
-    customer.name.firstName =
-      customer_dto.first_name ?? customer.name.firstName;
-    customer.name.middleName =
-      customer_dto.middle_name ?? customer.name.middleName;
+    customer.name.firstName = customer_dto.first_name ?? customer.name.firstName;
+    customer.name.middleName = customer_dto.middle_name ?? customer.name.middleName;
     customer.name.lastName = customer_dto.last_name ?? customer.name.lastName;
 
     customer.address.city = customer_dto.city ?? customer.address.city;
-    customer.address.postal_code =
-      customer_dto.postal_code ?? customer.address.postal_code;
+    customer.address.postal_code = customer_dto.postal_code ?? customer.address.postal_code;
 
-    customer.address.street.street_name =
-      customer_dto.street_name ?? customer.address.street.street_name;
-    customer.address.street.street_no =
-      customer_dto.street_no ?? customer.address.street.street_no;
-    customer.address.street.apartment_name =
-      customer_dto.apartment_name ?? customer.address.street.apartment_name;
+    customer.address.street.street_name = customer_dto.street_name ?? customer.address.street.street_name;
+    customer.address.street.street_no = customer_dto.street_no ?? customer.address.street.street_no;
+    customer.address.street.apartment_name = customer_dto.apartment_name ?? customer.address.street.apartment_name;
 
-    customer.credentials.password =
-      customer_dto.password ?? customer.credentials.password;
-    customer.credentials.username =
-      customer_dto.username ?? customer.credentials.username;
-    customer.credentials.profile_photo =
-      file?.path ?? customer.credentials.profile_photo;
+    customer.credentials.password = await this.auth_service.hash_password(customer_dto.password) ?? customer.credentials.password;
+    customer.credentials.username = customer_dto.username ?? customer.credentials.username;
+    customer.credentials.profile_photo = file?.path ?? customer.credentials.profile_photo;
 
     await this.street_repository.save(customer.address.street);
     await this.address_repository.save(customer.address);
