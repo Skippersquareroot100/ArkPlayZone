@@ -5,6 +5,7 @@ import { ManagerModule } from './manager/manager.module';
 import { CustomerModule } from './customer/customer.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MailModule } from './mailer/mailer.module';
+//import { OtpModule } from './otp/otp.module'; // from the OTP update
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { MailModule } from './mailer/mailer.module';
       synchronize: true,
     }),
     MailModule,
+   // OtpModule, // from the OTP update
   ],
 })
 export class AppModule {}

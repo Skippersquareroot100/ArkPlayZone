@@ -1,23 +1,36 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
+  Param,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { ManagerService } from './manager.service';
-import { NameDto } from './DTOs/name.dto';
 import { StaffDto } from './DTOs/staff.dto';
 import { Response } from 'express';
 import { diskStorage, MulterError } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Loginservice } from './login.service';
+import { StaffLoginDTO } from './DTOs/stafflogin.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
+import { TokenRequestDTO } from './DTOs/requestToken.dto';
+import { RefreshTokenService } from './refreshToken.service';
 
 @Controller('manager')
 export class ManagerController {
-  constructor(private readonly managerService: ManagerService) {}
+  constructor(
+    private readonly managerService: ManagerService,
+    private readonly loginservice: Loginservice,
+    private readonly refreshTokenService: RefreshTokenService,
+  ) {}
 
   @Get('hello')
   getHello(): string {
@@ -28,6 +41,7 @@ export class ManagerController {
   hello() {
     console.log('Hello from ManagerController!');
   }
+
   @Post('create-staff')
   @UsePipes(new ValidationPipe())
   @UseInterceptors(
@@ -61,9 +75,68 @@ export class ManagerController {
       return {
         message: 'Staff created successfully',
       };
-    } catch (e) {
-      console.log('Validation Error:', e);
-      throw e;
+    } catch (error) {
+      throw new HttpException('Error creating staff', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Post(':staff-login')
+  async login(@Body() stafflogin: StaffLoginDTO) {
+    try {
+      const token = await this.loginservice.login(stafflogin);
+      return {
+        statusCode: 200,
+        message: 'Login successful',
+        error: '',
+        token: token.access_token,
+      };
+    } catch (error) {
+      if (error instanceof HttpException) {
+        return {
+          statusCode: error.getStatus(),
+          message: '',
+          error: error.message,
+          token: '',
+        };
+      }
+      return {
+        statusCode: 500,
+        message: '',
+        error: 'Internal server error',
+        token: '',
+      };
+    }
+  }
+
+  @Get(':profile')
+  @UseGuards(JwtAuthGuard)
+  async getProfile() {
+    return 'your profile data';
+  }
+
+  @Get('test-token')
+  @UseGuards(JwtAuthGuard)
+  async testToken() {
+    return {
+      message: 'Token is valid!',
+    };
+  }
+
+  @Post('refresh-token')
+  async refresh(@Body() data: TokenRequestDTO) {
+    try {
+      const result = await this.refreshTokenService.refreshToken(data);
+      return {
+        statusCode: 200,
+        message: 'Token refreshed successfully',
+        error: '',
+        token: result.access_token,
+      };
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Unable to refresh token',
+        error.status || HttpStatus.BAD_REQUEST,
+      );
     }
   }
 }

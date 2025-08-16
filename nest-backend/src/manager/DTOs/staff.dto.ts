@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import {
+  IsEmail,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -52,6 +53,7 @@ export class StaffDto {
   role: string;
 
   @IsNotEmpty({ message: 'Email is required' })
+  @IsEmail({}, { message: 'Invalid email format' })
   email: string;
 
   @IsNotEmpty({ message: 'Phone number is required' })
