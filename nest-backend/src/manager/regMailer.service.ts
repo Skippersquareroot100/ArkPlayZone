@@ -5,7 +5,7 @@ import { MailService } from '../mailer/mailer.service';
 export class RegMailerService {
   constructor(private readonly mailService: MailService) {}
 
-  async sendRegistrationEmail(email: string, name:string) {
+  async sendRegistrationEmail(email: string, name: string) {
     const subject = 'Welcome to ArkPlayZone!';
     const text = `Hello ${name},
                   Thank you for registering with ArkPlayZone! We're excited to have you on board.
