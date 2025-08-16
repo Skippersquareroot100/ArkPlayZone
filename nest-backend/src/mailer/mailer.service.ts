@@ -35,6 +35,7 @@ export class MailService {
     };
   }
 
+
   async send_email_staffOTP(to: string, otp: string) {
     const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
@@ -61,4 +62,10 @@ export class MailService {
       message: 'OTP sent successfully',
     };
   }
+
+    reset_password_body = `<div style="font-family: Arial, sans-serif; padding: 20px; text-align: center;">
+  <p>Your password has been changed successfully.</p>
+  <p>If this was not you, please reset your password immediately or contact support.</p>
+</div>`
+
 }
