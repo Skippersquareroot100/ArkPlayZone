@@ -18,11 +18,15 @@ export class StaffOTPService {
     @InjectRepository(StaffOTP)
     private readonly staffOTPRepository: Repository<StaffOTP>,
   ) {}
+
   async generateOTP(data: TokenRequestDTO) {
+    console.log('Validating OTP for email:', data.email);
+    const email = data.email.trim().toLowerCase();
     const staff = await this.staffRepository.findOne({
-      where: { email: data.email },
+      where: { email: email },
     });
-    if (!staff || !staff.staff_id) {
+    console.log('Staff found:', staff);
+    if (!staff) {
       throw new HttpException('Staff not found', 404);
     }
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -51,6 +55,8 @@ export class StaffOTPService {
   }
 
   async validateOTP(data: VerifyOTPDTO) {
+
+    
     const staff = await this.staffRepository.findOne({
       where: { email: data.email },
     });

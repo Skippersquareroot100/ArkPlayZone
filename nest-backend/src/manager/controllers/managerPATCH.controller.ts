@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  HttpException,
   Patch,
   UsePipes,
   ValidationPipe,
@@ -21,7 +22,21 @@ export class ManagerPATCHController {
   )
   @Patch('update-pass')
   async updatePassword(@Body() data: UpdatePasswordDTO) {
-    await this.passResetService.resetPass(data);
-    return { message: 'Password updated successfully' };
+    try {
+      const isUpdated = await this.passResetService.resetPass(data);
+      return {
+        statusCode: isUpdated ? 200 : 400,
+        message: isUpdated
+          ? 'Password updated successfully'
+          : 'Password update failed',
+        error: isUpdated ? '' : 'Unknown error',
+      };
+    } catch (error) {
+      return {
+        statusCode: 500,
+        message: 'Something went wrong',
+        error: error instanceof Error ? error.message : 'Internal server error',
+      };
+    }
   }
 }

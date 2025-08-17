@@ -19,7 +19,7 @@ import { MailModule } from './mailer/mailer.module';
       port: 5432,
       username: 'postgres',
       password: '12345',
-      database: 'ArkPlayZone',
+      database: 'ArkPlayZone_DB',
       autoLoadEntities: true,
       synchronize: true,
     }),

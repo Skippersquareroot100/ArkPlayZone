@@ -1,12 +1,9 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
   HttpException,
   HttpStatus,
-  Param,
-  Patch,
   Post,
   UploadedFile,
   UseGuards,
@@ -24,10 +21,8 @@ import { StaffLoginDTO } from './DTOs/stafflogin.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 import { TokenRequestDTO } from './DTOs/requestToken.dto';
 import { RefreshTokenService } from './refreshToken.service';
-import { Staff } from 'src/manager/entities/staff.entity';
 import { StaffOTPService } from './staffOTP.service';
 import { VerifyOTPDTO } from './DTOs/verifyOTP.dto';
-import { UpdatePasswordDTO } from './DTOs/updatePass.dto';
 import { PassResetService } from './passReset.service';
 
 @Controller('manager')
@@ -116,20 +111,6 @@ export class ManagerController {
     }
   }
 
-  @Get(':profile')
-  @UseGuards(JwtAuthGuard)
-  async getProfile() {
-    return 'your profile data';
-  }
-
-  @Get('test-token')
-  @UseGuards(JwtAuthGuard)
-  async testToken() {
-    return {
-      message: 'Token is valid!',
-    };
-  }
-
   @Post('refresh-token')
   async refresh(@Body() data: TokenRequestDTO) {
     try {
@@ -158,8 +139,20 @@ export class ManagerController {
   @Post('forget-pass')
   async forgetPassword(@Body() data: TokenRequestDTO) {
     console.log('Generating OTP for:', data.email);
-    await this.staffOTPService.generateOTP(data);
-    return { message: 'OTP generated' };
+    try {
+      await this.staffOTPService.generateOTP(data);
+      return {
+        statusCode: 200,
+        message: 'OTP generated',
+        error: '',
+      };
+    } catch (error) {
+      return {
+        statusCode: 500,
+        message: 'Invalid email!!!   ',
+        error: 'Internal server error',
+      };
+    }
   }
 
   @UsePipes(
@@ -171,19 +164,21 @@ export class ManagerController {
   )
   @Post('OTP-verify')
   async verifyOTP(@Body() data: VerifyOTPDTO) {
-    await this.staffOTPService.validateOTP(data);
-    return { message: 'OTP verified successfully' };
-  }
-  @UsePipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  )
-  @Patch('update-pass')
-  async updatePassword(@Body() data: UpdatePasswordDTO) {
-    await this.passResetService.resetPass(data);
-    return { message: 'Password updated successfully' };
+    console.log('Verifying OTP for:', data.email);
+    console.log('OTP:', data.otp);
+    try {
+      await this.staffOTPService.validateOTP(data);
+      return {
+        statusCode: 200,
+        message: '',
+        error: '',
+      };
+    } catch (error) {
+      return {
+        statusCode: 400,
+        message: 'Invalid OTP',
+        error: 'Bad Request',
+      };
+    }
   }
 }

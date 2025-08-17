@@ -12,6 +12,8 @@ export class PassResetService {
   ) {}
 
   async resetPass(data: UpdatePasswordDTO) {
+    console.log(data.email);
+    console.log(data.password);
     const staff = await this.staffRepository.findOne({
       where: { email: data.email },
     });
@@ -22,5 +24,6 @@ export class PassResetService {
     const saltRounds = 10;
     staff.password = await bcrypt.hash(data.password, saltRounds);
     await this.staffRepository.save(staff);
+    return true;
   }
 }

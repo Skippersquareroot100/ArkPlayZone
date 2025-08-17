@@ -26,6 +26,12 @@ import { StaffFinancial } from './entities/staffFinancial.entity';
 import { StaffOTPService } from './staffOTP.service';
 import { PassResetService } from './passReset.service';
 import { ManagerPATCHController } from './controllers/managerPATCH.controller';
+import { UpdateStaffService } from './updateStaff.service';
+import { ManagerPUTController } from './controllers/managerPUT.controller';
+import { StaffDetailsService } from './staffDetails.service';
+import { ManagerGETController } from './controllers/managerGET.controller';
+import { ManagerDELETEController } from './controllers/managerDELETE.controller';
+import { StaffDeleteService } from './satffDelete.service';
 
 @Module({
   imports: [
@@ -49,7 +55,13 @@ import { ManagerPATCHController } from './controllers/managerPATCH.controller';
     MailModule,
     AuthModule,
   ],
-  controllers: [ManagerController, ManagerPATCHController],
+  controllers: [
+    ManagerController,
+    ManagerPATCHController,
+    ManagerPUTController,
+    ManagerGETController,
+    ManagerDELETEController,
+  ],
   providers: [
     RegMailerService,
     ManagerService,
@@ -58,6 +70,9 @@ import { ManagerPATCHController } from './controllers/managerPATCH.controller';
     RefreshTokenService,
     StaffOTPService,
     PassResetService,
+    UpdateStaffService,
+    StaffDetailsService,
+    StaffDeleteService,
   ],
 })
 export class ManagerModule {}
