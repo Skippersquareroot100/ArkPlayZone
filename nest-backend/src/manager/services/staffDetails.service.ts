@@ -1,42 +1,28 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Inject, Injectable } from '@nestjs/common';
 import { Staff } from '../entities/staff.entity';
-import { Repository } from 'typeorm';
-import { Address } from '../entities/address.entity';
-import { Name } from '../entities/name.entity';
-import { Street } from '../entities/street.entity';
+import { StaffDetailsInterface } from './interfaces/staffDetails.interface';
 
 @Injectable()
 export class StaffDetailsService {
   constructor(
-    @InjectRepository(Staff) private staffRepository: Repository<Staff>,
-    @InjectRepository(Address) private addressRepository: Repository<Address>,
-    @InjectRepository(Name) private nameRepository: Repository<Name>,
-    @InjectRepository(Street) private streetRepository: Repository<Street>,
+    @Inject('StaffDetailsInterface')
+    private readonly staffDetailsInterface: StaffDetailsInterface,
   ) {}
 
-  async getStaffDetails(role?: string, page?: number, limit?: number) {
-    const skip = page && limit ? (page - 1) * limit : undefined;
-    const take = limit ?? undefined;
-
-    const [staff, total] = await this.staffRepository.findAndCount({
-      where: role ? { role } : {},
-      relations: ['name', 'address', 'address.street'],
-      skip,
-      take,
-    });
-
-    return {
-      page: page ?? null,
-      limit: limit ?? null,
-      total,
-      data: staff,
-    };
+  async getStaffDetails(
+    role?: string,
+    page?: number,
+    limit?: number,
+  ): Promise<{
+    page: number | null;
+    limit: number | null;
+    total: number;
+    data: Staff[];
+  }> {
+    return this.staffDetailsInterface.getStaffDetails(role, page, limit);
   }
 
-  async getPhotosName(email: string) {
-    const staff = await this.staffRepository.findOne({ where: { email } });
-    if (!staff) throw new HttpException('Staff not found', 404);
-    return staff.photo;
+  async getPhotosName(email: string): Promise<string> {
+    return this.staffDetailsInterface.getPhotosName(email);
   }
 }

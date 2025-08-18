@@ -23,7 +23,6 @@ import { PassResetService } from '../services/passReset.service';
 import { RefreshTokenService } from '../services/refreshToken.service';
 import { StaffOTPService } from '../services/staffOTP.service';
 
-
 @Controller('manager')
 export class ManagerController {
   constructor(

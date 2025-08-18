@@ -32,7 +32,14 @@ import { StaffDetailsService } from './services/staffDetails.service';
 import { StaffOTPService } from './services/staffOTP.service';
 import { ManagerService } from './services/manager.service';
 import { UpdateStaffService } from './services/updateStaff.service';
-
+import { LoginImplementation } from './services/implementations/login.implimentation';
+import { PassResetImplementation } from './services/implementations/passReset.implimentation';
+import { managerImplementation } from './services/implementations/manager.implementation';
+import { SalaryImplementation } from './services/implementations/salary.implementation';
+import { StaffDeleteImplementation } from './services/implementations/staffDelete.implementation';
+import { StaffDetailsImplementation } from './services/implementations/staffDetails.implementation';
+import { StaffOTPImplementation } from './services/implementations/staffOTP.implementation';
+import { UpdateStaffImplementation } from './services/implementations/updateStaff.implementation';
 
 @Module({
   imports: [
@@ -66,15 +73,55 @@ import { UpdateStaffService } from './services/updateStaff.service';
   providers: [
     RegMailerService,
     ManagerService,
+    managerImplementation,
+    {
+      provide: 'ManagerInterface',
+      useClass: managerImplementation,
+    },
     Loginservice,
+    LoginImplementation,
+    {
+      provide: 'LoginInterface',
+      useClass: LoginImplementation,
+    },
     JwtAuthGuard,
     RefreshTokenService,
     StaffOTPService,
+    StaffOTPImplementation,
+    {
+      provide: 'StaffOTPInterface',
+      useClass: StaffOTPImplementation,
+    },
     PassResetService,
+    PassResetImplementation,
+    {
+      provide: 'PassResetInterface',
+      useClass: PassResetImplementation,
+    },
     UpdateStaffService,
+    UpdateStaffImplementation,
+    {
+      provide: 'UpdateStaffInterface',
+      useClass: UpdateStaffImplementation,
+    },
     StaffDetailsService,
+    StaffDetailsImplementation,
+    {
+      provide: 'StaffDetailsInterface',
+      useClass: StaffDetailsImplementation,
+    },
     StaffDeleteService,
+    StaffDeleteImplementation,
+    {
+      provide: 'StaffDeleteInterface',
+      useClass: StaffDeleteImplementation,
+    },
     SalaryService,
+    SalaryImplementation,
+    {
+      provide: 'SalaryInterface',
+      useClass: SalaryImplementation,
+    },
   ],
 })
 export class ManagerModule {}

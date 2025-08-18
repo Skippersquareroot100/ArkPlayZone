@@ -14,8 +14,9 @@ import { error } from 'console';
 
 @Controller('manager')
 export class ManagerPATCHController {
-  constructor(private readonly passResetService: PassResetService,
-    private readonly salaryService: SalaryService
+  constructor(
+    private readonly passResetService: PassResetService,
+    private readonly salaryService: SalaryService,
   ) {}
 
   @UsePipes(
@@ -52,7 +53,7 @@ export class ManagerPATCHController {
       return {
         statusCode: 200,
         message: 'Salary updated successfully',
-        error:'',
+        error: '',
       };
     } catch (error) {
       return {
