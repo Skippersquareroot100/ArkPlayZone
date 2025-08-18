@@ -1,10 +1,10 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Staff } from './entities/staff.entity';
+import { Staff } from '../entities/staff.entity';
 import { Repository } from 'typeorm';
-import { Address } from './entities/address.entity';
-import { Name } from './entities/name.entity';
-import { Street } from './entities/street.entity';
+import { Address } from '../entities/address.entity';
+import { Name } from '../entities/name.entity';
+import { Street } from '../entities/street.entity';
 
 @Injectable()
 export class StaffDetailsService {

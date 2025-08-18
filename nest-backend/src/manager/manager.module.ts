@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ManagerController } from './manager.controller';
-import { ManagerService } from './manager.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PlanType } from './entities/plantype.entity';
 import { NotificationType } from './entities/notificationtype.entity';
@@ -14,24 +12,27 @@ import { Shift } from './entities/shift.entity';
 import { Supplier } from './entities/supplier.entity';
 import { Staff } from './entities/staff.entity';
 import { Activity } from 'src/admin/entities/activity.entity';
-import { RegMailerService } from './regMailer.service';
 import { MailModule } from 'src/mailer/mailer.module';
-import { Loginservice } from './login.service';
-import { AuthService } from 'src/auth/auth.service';
+import { Loginservice } from './services/login.service';
 import { AuthModule } from 'src/auth/auth.module';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
-import { RefreshTokenService } from './refreshToken.service';
 import { StaffOTP } from './entities/staffOTP.entity';
 import { StaffFinancial } from './entities/staffFinancial.entity';
-import { StaffOTPService } from './staffOTP.service';
-import { PassResetService } from './passReset.service';
 import { ManagerPATCHController } from './controllers/managerPATCH.controller';
-import { UpdateStaffService } from './updateStaff.service';
 import { ManagerPUTController } from './controllers/managerPUT.controller';
-import { StaffDetailsService } from './staffDetails.service';
 import { ManagerGETController } from './controllers/managerGET.controller';
 import { ManagerDELETEController } from './controllers/managerDELETE.controller';
-import { StaffDeleteService } from './satffDelete.service';
+import { ManagerController } from './controllers/managerPOST.controller';
+import { PassResetService } from './services/passReset.service';
+import { RefreshTokenService } from './services/refreshToken.service';
+import { RegMailerService } from './services/regMailer.service';
+import { SalaryService } from './services/salary.service';
+import { StaffDeleteService } from './services/satffDelete.service';
+import { StaffDetailsService } from './services/staffDetails.service';
+import { StaffOTPService } from './services/staffOTP.service';
+import { ManagerService } from './services/manager.service';
+import { UpdateStaffService } from './services/updateStaff.service';
+
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { StaffDeleteService } from './satffDelete.service';
     UpdateStaffService,
     StaffDetailsService,
     StaffDeleteService,
+    SalaryService,
   ],
 })
 export class ManagerModule {}

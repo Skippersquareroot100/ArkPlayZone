@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
 import { Staff } from 'src/manager/entities/staff.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TokenRequestDTO } from './DTOs/requestToken.dto';
+import { TokenRequestDTO } from '../DTOs/requestToken.dto';
 import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()

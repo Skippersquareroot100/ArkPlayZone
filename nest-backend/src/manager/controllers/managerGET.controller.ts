@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Query, Res, UseGuards } from '@nestjs/common';
-import { StaffDetailsService } from '../staffDetails.service';
+import { StaffDetailsService } from '../services/staffDetails.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 
 @Controller('manager')

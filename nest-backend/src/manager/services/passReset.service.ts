@@ -1,8 +1,8 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Staff } from './entities/staff.entity';
+import { Staff } from '../entities/staff.entity';
 import { Repository } from 'typeorm';
-import { UpdatePasswordDTO } from './DTOs/updatePass.dto';
+import { UpdatePasswordDTO } from '../DTOs/updatePass.dto';
 import * as bcrypt from 'bcrypt';
 @Injectable()
 export class PassResetService {

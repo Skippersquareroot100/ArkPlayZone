@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AdminModule } from './admin/admin.module';
 import { EmployeeModule } from './employee/employee.module';
-import { ManagerModule } from './manager/manager.module';
 import { CustomerModule } from './customer/customer.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MailModule } from './mailer/mailer.module';
+import { ManagerModule } from './manager/manager.module';
 //import { OtpModule } from './otp/otp.module'; // from the OTP update
 
 @Module({

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { MailService } from '../mailer/mailer.service';
+import { MailService } from '../../mailer/mailer.service';
 
 @Injectable()
 export class RegMailerService {

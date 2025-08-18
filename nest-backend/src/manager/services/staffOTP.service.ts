@@ -1,11 +1,11 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { TokenRequestDTO } from './DTOs/requestToken.dto';
-import { VerifyOTPDTO } from './DTOs/verifyOTP.dto';
+import { TokenRequestDTO } from '../DTOs/requestToken.dto';
+import { VerifyOTPDTO } from '../DTOs/verifyOTP.dto';
 import { MailerService } from '@nestjs-modules/mailer';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Staff } from './entities/staff.entity';
-import { StaffOTP } from './entities/staffOTP.entity';
+import { Staff } from '../entities/staff.entity';
+import { StaffOTP } from '../entities/staffOTP.entity';
 import { MailService } from 'src/mailer/mailer.service';
 
 @Injectable()

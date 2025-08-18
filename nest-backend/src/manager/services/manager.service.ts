@@ -4,15 +4,15 @@ import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { NameDto } from './DTOs/name.dto';
+import { NameDto } from '../DTOs/name.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Name } from './entities/name.entity';
-import { Staff } from './entities/staff.entity';
-import { Address } from './entities/address.entity';
-import { Street } from './entities/street.entity';
-import { StaffDto } from './DTOs/staff.dto';
-import { Shift } from './entities/shift.entity';
+import { Name } from '../entities/name.entity';
+import { Staff } from '../entities/staff.entity';
+import { Address } from '../entities/address.entity';
+import { Street } from '../entities/street.entity';
+import { StaffDto } from '../DTOs/staff.dto';
+import { Shift } from '../entities/shift.entity';
 import { Activity } from 'src/admin/entities/activity.entity';
 import * as bcrypt from 'bcrypt';
 import { RegMailerService } from './regMailer.service';

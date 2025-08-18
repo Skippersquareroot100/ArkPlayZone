@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { StaffLoginDTO } from './DTOs/stafflogin.dto';
+import { StaffLoginDTO } from '../DTOs/stafflogin.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Staff } from './entities/staff.entity';
+import { Staff } from '../entities/staff.entity';
 import { Repository } from 'typeorm';
 import { AuthService } from 'src/auth/auth.service';
 import * as bcrypt from 'bcrypt';

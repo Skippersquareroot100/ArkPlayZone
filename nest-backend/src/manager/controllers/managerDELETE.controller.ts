@@ -1,5 +1,5 @@
 import { Body, Controller, Delete } from '@nestjs/common';
-import { StaffDeleteService } from '../satffDelete.service';
+import { StaffDeleteService } from '../services/satffDelete.service';
 
 @Controller('manager')
 export class ManagerDELETEController {

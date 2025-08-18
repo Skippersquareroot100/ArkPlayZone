@@ -9,7 +9,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { UpdateStaffDTO } from '../DTOs/updateStaff.dto';
-import { UpdateStaffService } from '../updateStaff.service';
+import { UpdateStaffService } from '../services/updateStaff.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage, MulterError } from 'multer';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
