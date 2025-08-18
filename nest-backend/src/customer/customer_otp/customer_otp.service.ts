@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpCode, HttpStatus, Injectable } from "@nestjs/common";
 import { generate } from "rxjs";
 import { MailService } from "src/mailer/mailer.service";
 import { Customer } from "../entities/customer.entity";
@@ -67,6 +67,7 @@ export class CustomerOtpService {
         if(resp.status == 'success'){
             return {
                 status: 'success',
+                statusCode: HttpStatus.OK,
                 message: 'OTP sent successfully',
                 otp: otp
             };
@@ -103,7 +104,6 @@ export class CustomerOtpService {
         });
         if(!otp_entry){
             return {
-
                 status: 'failed',
                 message: 'Invalid OTP ',
             };

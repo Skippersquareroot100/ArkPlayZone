@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { customer_dto } from './customer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CustomerAddress } from './entities/customeraddress.entity';
@@ -32,8 +32,8 @@ export class CustomerService {
     @InjectRepository(customer_otp)
     private customer_otp_repository: Repository<customer_otp>,
     private readonly otp_service: CustomerOtpService,
-    private readonly auth_service : AuthService,
-  ) { }
+    private readonly auth_service: AuthService,
+  ) {}
   getDashboard(): string {
     return 'Customer Dashboard';
   }
@@ -50,7 +50,9 @@ export class CustomerService {
     customer_dto: customer_dto,
     file?: Express.Multer.File,
   ) {
-    const hashed_password = await this.auth_service.hash_password(customer_dto.password)
+    const hashed_password = await this.auth_service.hash_password(
+      customer_dto.password,
+    );
     const new_street = this.street_repository.create({
       street_no: customer_dto.street_no,
       street_name: customer_dto.street_name,
@@ -124,13 +126,11 @@ export class CustomerService {
       relations: ['name', 'address', 'profile', 'credentials'],
     });
     if (!customer) {
-      return {
-        status: 'error',
-        message: 'Customer not found',
-      };
+      throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
     } else {
       return {
         status: 'success',
+        statusCode: HttpStatus.OK,
         message: 'Customer found',
         data: customer,
       };
@@ -142,12 +142,14 @@ export class CustomerService {
       relations: ['credentials', 'name', 'address', 'profile'],
     });
     if (!resp) {
-      return {
-        status: 'failed',
-        message: 'Invalid email',
-      };
+      throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
     }
-    if (await this.auth_service.compare_password(password,resp.credentials.password)) {
+    if (
+      await this.auth_service.compare_password(
+        password,
+        resp.credentials.password,
+      )
+    ) {
       const body = this.otp_service.welcome_body;
       this.mailService.send_email_with_html(
         resp.email,
@@ -156,14 +158,12 @@ export class CustomerService {
       );
       return {
         status: 'success',
+        statusCode: HttpStatus.OK,
         message: 'Login successful',
         data: resp,
       };
     } else {
-      return {
-        status: 'failed',
-        message: 'Incorrect password',
-      };
+      throw new HttpException('Invalid Password', HttpStatus.UNAUTHORIZED);
     }
   }
   async customer_forget_password(email: string) {
@@ -172,10 +172,7 @@ export class CustomerService {
       relations: ['credentials'],
     });
     if (!customer) {
-      return {
-        status: 'error',
-        message: 'Customer not found',
-      };
+      throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
     }
     const otp_resp = await this.otp_service.send_otp(email);
     if (otp_resp.status === 'success') {
@@ -186,14 +183,12 @@ export class CustomerService {
       const otp_entry = await this.customer_otp_repository.save(new_otp);
       return {
         status: 'success',
+        statusCode: HttpStatus.OK,
         message: 'OTP sent successfully',
         otp_signature: otp_entry.otp_signature,
       };
     } else {
-      return {
-        status: 'error',
-        message: 'Failed to send OTP',
-      };
+      throw new HttpException('Failed to send OTP',HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
   async reset_password(
@@ -206,20 +201,17 @@ export class CustomerService {
       relations: ['customer_id', 'customer_id.credentials'],
     });
     if (!customer) {
-      return {
-        status: 'failed',
-        message: 'Invalid OTP signature',
-      };
+      throw new HttpException('Invalid OTP', HttpStatus.BAD_REQUEST);
     }
     const resp = await this.otp_service.verify_otp(otp_signature, otp);
     if (resp.status === 'failed') {
       return resp;
     }
     if (!customer.customer_id.credentials) {
-      return {
-        status: 'error',
-        message: 'Customer credentials not found',
-      };
+      throw new HttpException(
+        'Customer credentials not found',
+        HttpStatus.NOT_FOUND,
+      );
     }
     //console.log('new password : ' + new_password)
     const hashed_password = await this.auth_service.hash_password(new_password);
@@ -235,7 +227,7 @@ export class CustomerService {
 
     return {
       status: 'success',
-
+      statusCode: HttpStatus.OK,
       message: 'Password reset successfully',
     };
   }
@@ -252,6 +244,7 @@ export class CustomerService {
     await this.customer_repository.remove(customer);
     return {
       status: 'success',
+      statusCode: HttpStatus.OK,
       message: 'Customer deleted successfully',
     };
   }
@@ -262,31 +255,44 @@ export class CustomerService {
   ) {
     const customer = await this.customer_repository.findOne({
       where: { customer_id: id },
-      relations: ['name', 'address', 'profile', 'credentials', 'address.street'],
+      relations: [
+        'name',
+        'address',
+        'profile',
+        'credentials',
+        'address.street',
+      ],
     });
     if (!customer) {
-      return {
-        status: 'failed',
-        message: 'Customer not found',
-      };
+      throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
     }
     customer.email = customer_dto.email ?? customer.email;
     customer.phone = customer_dto.phone_number ?? customer.phone;
 
-    customer.name.firstName = customer_dto.first_name ?? customer.name.firstName;
-    customer.name.middleName = customer_dto.middle_name ?? customer.name.middleName;
+    customer.name.firstName =
+      customer_dto.first_name ?? customer.name.firstName;
+    customer.name.middleName =
+      customer_dto.middle_name ?? customer.name.middleName;
     customer.name.lastName = customer_dto.last_name ?? customer.name.lastName;
 
     customer.address.city = customer_dto.city ?? customer.address.city;
-    customer.address.postal_code = customer_dto.postal_code ?? customer.address.postal_code;
+    customer.address.postal_code =
+      customer_dto.postal_code ?? customer.address.postal_code;
 
-    customer.address.street.street_name = customer_dto.street_name ?? customer.address.street.street_name;
-    customer.address.street.street_no = customer_dto.street_no ?? customer.address.street.street_no;
-    customer.address.street.apartment_name = customer_dto.apartment_name ?? customer.address.street.apartment_name;
+    customer.address.street.street_name =
+      customer_dto.street_name ?? customer.address.street.street_name;
+    customer.address.street.street_no =
+      customer_dto.street_no ?? customer.address.street.street_no;
+    customer.address.street.apartment_name =
+      customer_dto.apartment_name ?? customer.address.street.apartment_name;
 
-    customer.credentials.password = await this.auth_service.hash_password(customer_dto.password) ?? customer.credentials.password;
-    customer.credentials.username = customer_dto.username ?? customer.credentials.username;
-    customer.credentials.profile_photo = file?.path ?? customer.credentials.profile_photo;
+    customer.credentials.password =
+      (await this.auth_service.hash_password(customer_dto.password)) ??
+      customer.credentials.password;
+    customer.credentials.username =
+      customer_dto.username ?? customer.credentials.username;
+    customer.credentials.profile_photo =
+      file?.path ?? customer.credentials.profile_photo;
 
     await this.street_repository.save(customer.address.street);
     await this.address_repository.save(customer.address);
@@ -296,6 +302,7 @@ export class CustomerService {
 
     return {
       status: 'success',
+      statusCode: HttpStatus.OK,
       message: 'Customer updated successfully',
       data: customer,
     };
