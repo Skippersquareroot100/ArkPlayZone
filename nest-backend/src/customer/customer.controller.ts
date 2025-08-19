@@ -13,6 +13,8 @@ import {
   Patch,
   Delete,
   Put,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -21,6 +23,7 @@ import { customer_dto } from './customer.dto';
 import { MailService } from '../mailer/mailer.service';
 import { Customer } from './entities/customer.entity';
 import e from 'express';
+import { customer_session_guard } from './customer_auth/customer.guard';
 
 @Controller('customer')
 export class CustomerController {
@@ -116,9 +119,10 @@ export class CustomerController {
     }
     @Post('login')
     async login_customer(
-        @Body() login_data: { email: string; password: string },
+        @Body() login_data: { email: string; password: string},
+        @Req() req: any
     ) {
-      return await this.customerService.login_customer(login_data.email, login_data.password);
+      return await this.customerService.login_customer(login_data.email, login_data.password,req);
 
     }
 
@@ -129,6 +133,7 @@ export class CustomerController {
       return await this.customerService.customer_forget_password(email);
     }
 
+    @UseGuards(customer_session_guard)
     @Patch('reset_password')
     async reset_password(
       @Body() reset_data: { otp_signature: string; otp: number; password: string },
@@ -144,6 +149,7 @@ export class CustomerController {
       return await this.customerService.delete_customer(id);
     }
 
+    @UseGuards(customer_session_guard)
     @Put('update/:id')
     @UsePipes(new ValidationPipe())
     @UseInterceptors(FileInterceptor('file',{
@@ -169,6 +175,13 @@ export class CustomerController {
     ) {
       return await this.customerService.update_customer(id, customer_dto, file);
     }
+
+    @UseGuards(customer_session_guard)
+    @Get('logout')
+    logout(@Req() req) {
+    req.session.destroy();
+    return { message: 'Logged out successfully' };
+  }
 
 
   

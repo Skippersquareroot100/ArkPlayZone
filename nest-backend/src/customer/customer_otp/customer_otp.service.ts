@@ -123,7 +123,7 @@ export class CustomerOtpService {
             };
         }
 
-        // when otp time expired
+        
         if(diff >10 * 60 * 1000){
           this.resend_otp(otp_entry);
           return {

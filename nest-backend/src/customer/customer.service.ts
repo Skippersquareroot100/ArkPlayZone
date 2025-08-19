@@ -136,7 +136,7 @@ export class CustomerService {
       };
     }
   }
-  async login_customer(email: string, password: string) {
+  async login_customer(email: string, password: string,req : any) {
     const resp = await this.customer_repository.findOne({
       where: { email: email },
       relations: ['credentials', 'name', 'address', 'profile'],
@@ -150,6 +150,12 @@ export class CustomerService {
         resp.credentials.password,
       )
     ) {
+      req.session.customer = {
+        id : resp.customer_id ,
+        email : resp.email,
+        name : resp.name.firstName + ' ' + resp.name.middleName + ' '+ resp.name.lastName
+      }
+      
       const body = this.otp_service.welcome_body;
       this.mailService.send_email_with_html(
         resp.email,
@@ -160,6 +166,7 @@ export class CustomerService {
         status: 'success',
         statusCode: HttpStatus.OK,
         message: 'Login successful',
+        session_info : req.session.customer,
         data: resp,
       };
     } else {
