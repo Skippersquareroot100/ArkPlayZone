@@ -22,6 +22,8 @@ import { ManagerService } from '../services/manager.service';
 import { PassResetService } from '../services/passReset.service';
 import { RefreshTokenService } from '../services/refreshToken.service';
 import { StaffOTPService } from '../services/staffOTP.service';
+import { MobileActivityDto } from '../DTOs/mobileActivity.dto';
+import { MobileActivityService } from '../services/mobileActivity.service';
 
 @Controller('manager')
 export class ManagerController {
@@ -31,6 +33,7 @@ export class ManagerController {
     private readonly refreshTokenService: RefreshTokenService,
     private readonly staffOTPService: StaffOTPService,
     private readonly passResetService: PassResetService,
+    private readonly mobileActivityService: MobileActivityService,
   ) {}
 
   @Get('hello')
@@ -178,5 +181,32 @@ export class ManagerController {
         error: 'Bad Request',
       };
     }
+  }
+
+  @UsePipes(new ValidationPipe())
+  @UseInterceptors(
+    FileInterceptor('file', {
+      fileFilter: (req, file, cb) => {
+        if (file.originalname.match(/^.*\.(jpg|webp|png|jpeg|pdf)$/)) {
+          cb(null, true);
+        } else {
+          cb(new MulterError('LIMIT_UNEXPECTED_FILE', 'file'), false);
+        }
+      },
+      limits: { fileSize: 30000000 },
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          cb(null, Date.now() + file.originalname);
+        },
+      }),
+    }),
+  )
+  @Post('activity')
+  async createActivity(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() dto: MobileActivityDto,
+  ) {
+    await this.mobileActivityService.createActivity(file, dto);
   }
 }

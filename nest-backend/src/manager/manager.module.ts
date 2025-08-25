@@ -40,6 +40,8 @@ import { StaffDeleteImplementation } from './services/implementations/staffDelet
 import { StaffDetailsImplementation } from './services/implementations/staffDetails.implementation';
 import { StaffOTPImplementation } from './services/implementations/staffOTP.implementation';
 import { UpdateStaffImplementation } from './services/implementations/updateStaff.implementation';
+import { MobileActivityService } from './services/mobileActivity.service';
+import { MobileActivity } from './entities/mobileActivity.entity';
 
 @Module({
   imports: [
@@ -59,6 +61,7 @@ import { UpdateStaffImplementation } from './services/implementations/updateStaf
       Staff,
       StaffOTP,
       StaffFinancial,
+      MobileActivity, 
     ]),
     MailModule,
     AuthModule,
@@ -122,6 +125,7 @@ import { UpdateStaffImplementation } from './services/implementations/updateStaf
       provide: 'SalaryInterface',
       useClass: SalaryImplementation,
     },
+    MobileActivityService,
   ],
 })
 export class ManagerModule {}

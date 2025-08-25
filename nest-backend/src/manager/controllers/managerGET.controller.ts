@@ -1,10 +1,13 @@
 import { Body, Controller, Get, Query, Res, UseGuards } from '@nestjs/common';
 import { StaffDetailsService } from '../services/staffDetails.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
+import { MobileActivityService } from '../services/mobileActivity.service';
 
 @Controller('manager')
 export class ManagerGETController {
-  constructor(private staffDetailsService: StaffDetailsService) {}
+  constructor(private staffDetailsService: StaffDetailsService,
+    private mobileActivityService: MobileActivityService
+  ) {}
 
   @Get('details')
   async getdetalis(
@@ -29,4 +32,15 @@ export class ManagerGETController {
       message: 'Token is valid!',
     };
   }
+
+   @Get('activity')
+  async getAllActivities() {
+    const activities = await this.mobileActivityService.getAllActivities();
+
+    return {
+      status: 'success',
+      data: activities,
+    };
+  }
 }
+
