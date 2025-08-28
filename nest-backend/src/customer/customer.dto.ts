@@ -1,51 +1,62 @@
-import { Type } from "class-transformer";
-import { IsEmail, IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString, Length, Matches, MinLength } from "class-validator";
+import { Type } from 'class-transformer';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsNumberString,
+  IsOptional,
+  IsString,
+  Length,
+  Matches,
+  MinLength,
+} from 'class-validator';
 
-export class customer_dto{
-    @IsNotEmpty()
-    @IsString()
-    @Matches(/^[A-Za-z\s]+$/, {
-        message: 'Name must contain only alphabets',
-    })
-    first_name : string 
+export class customer_dto {
+  @IsNotEmpty()
+  @IsString()
+  @Matches(/^[A-Za-z\s]+$/, {
+    message: 'Name must contain only alphabets',
+  })
+  first_name: string;
 
-    @IsOptional()
-    @IsString()
-    @Matches(/^[A-Za-z\s]+$/, {
-        message: 'Name must contain only alphabets',
-    })
-    middle_name : string
+  @IsOptional()
+  @IsString()
+  @Matches(/^[A-Za-z\s]+$/, {
+    message: 'Name must contain only alphabets',
+  })
+  middle_name: string;
 
-    @IsNotEmpty()
-    @IsString()
-    @Matches(/^[A-Za-z\s]+$/, {
-        message: 'Name must contain only alphabets',
-    })
-    last_name : string
-    @IsNotEmpty()
-    @IsEmail()
-    email : string ;
+  @IsNotEmpty()
+  @IsString()
+  @Matches(/^[A-Za-z\s]+$/, {
+    message: 'Name must contain only alphabets',
+  })
+  last_name: string;
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
 
-    @IsNotEmpty()
-    @MinLength(6,{
-        message : "Password must be at least 6 characters long"
-    })
-    @Matches(/(?=.*[a-z])/, {
+  @IsNotEmpty()
+  @MinLength(6, {
+    message: 'Password must be at least 6 characters long',
+  })
+  @Matches(/(?=.*[a-z])/, {
     message: 'Password must contain at least one lowercase letter',
-    })
-    @Matches(/(?=.*[A-Z])/, {
+  })
+  @Matches(/(?=.*[A-Z])/, {
     message: 'Password must contain at least one uppercase letter',
-    })
-    @Matches(/(?=.*\d)/, {
+  })
+  @Matches(/(?=.*\d)/, {
     message: 'Password must contain at least one number',
-    })
-    @Matches(/(?=.*[!@#$%^&*()_\-+=\[\]{};':"\\|,.<>\/?])/, {
+  })
+  @Matches(/(?=.*[!@#$%^&*()_\-+=\[\]{};':"\\|,.<>\/?])/, {
     message: 'Password must contain at least one special character',
-    })
-    password: string;
+  })
+  password: string;
 
-    @IsNotEmpty()
-    username : string
+  @IsNotEmpty()
+  username: string;
+
 
     @IsNotEmpty()
     @IsNumberString({}, {
@@ -56,30 +67,28 @@ export class customer_dto{
     })
     phone_number: string;
 
-    @IsNotEmpty()
-    @IsString()
-    @Matches(/^[A-Za-z\s]+$/, {
-    message: 'City must contain only alphabets',})
-    city : string
+  @IsNotEmpty()
+  @IsString()
+  @Matches(/^[A-Za-z\s]+$/, {
+    message: 'City must contain only alphabets',
+  })
+  city: string;
 
-    @IsNotEmpty()
-    @Type(() => Number)
-    @IsNumber()
-    postal_code :  number ;
+  @IsNotEmpty()
+  @Type(() => Number)
+  @IsNumber()
+  postal_code: number;
 
-    @IsNotEmpty()
-    @Type(() => Number)
-    @IsNumber()
-    street_no : number ;
+  @IsNotEmpty()
+  @Type(() => Number)
+  @IsNumber()
+  street_no: number;
 
-    @IsOptional()
-    @IsString()
-    street_name : string
+  @IsOptional()
+  @IsString()
+  street_name: string;
 
-    @IsOptional()
-    @IsString()
-    apartment_name : string
-    
-
-
+  @IsOptional()
+  @IsString()
+  apartment_name: string;
 }

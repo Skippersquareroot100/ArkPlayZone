@@ -57,8 +57,8 @@ export class Staff {
   })
   @JoinColumn({ name: 'ad_id' })
   address: Address;
- 
-  @OneToMany(() => Incident, (incident) => incident.staff)
+
+  @OneToMany(() => Incident, (incident) => incident.staff,{onDelete: 'CASCADE'})
   incidents: Incident[];
 
   @ManyToMany(() => Shift, (shift) => shift.staffs, {
@@ -71,13 +71,13 @@ export class Staff {
     onDelete: 'CASCADE',
     nullable: true,
   })
-  @JoinColumn({ name: 'activity_id'})
+  @JoinColumn({ name: 'activity_id' })
   activity: Activity;
 
-   @OneToOne(() => StaffOTP, (otp) => otp.staff, {
-     cascade: true,
-   })
-   otp: StaffOTP;
+  @OneToOne(() => StaffOTP, (otp) => otp.staff, {
+    cascade: true,
+  })
+  otp: StaffOTP;
   @OneToMany(() => StaffFinancial, (financial) => financial.staff, {
     cascade: true,
   })
