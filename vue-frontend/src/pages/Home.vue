@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <h1>🏠 Home Page</h1>
-    <p>Welcome to my Vue website!</p>
+  <div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <h1 class="text-red-600">Hello Vue + Tailwind 🎉</h1>
   </div>
 </template>

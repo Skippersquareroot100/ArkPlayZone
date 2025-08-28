@@ -1,24 +1,32 @@
 @import "tailwindcss";
 
+/* Day colors (default) */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-bg: #D7E0C5;       /* Pale Sage */
+  --color-text: #293F02;     /* Deep Forest Green */
+  --color-card: #FFFFFF;      /* White */
+  --color-accent: #4E7800;    /* Moss Green */
+  --color-accent-hover: #5B8116; /* Olive Green */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Night colors */
+.dark {
+  --color-bg: #121A0A;       /* Forest Dark */
+  --color-text: #EAEAEA;     /* Light Gray */
+  --color-card: #2B2F25;      /* Sage Dark */
+  --color-accent: #7FB069;    /* Muted Moss */
+  --color-accent-hover: #A3B97C; /* Dusty Olive */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* Utility classes */
+.bg-theme { background-color: var(--color-bg); }
+.text-theme { color: var(--color-text); }
+.bg-card { background-color: var(--color-card); }
+.text-accent { color: var(--color-accent); }
+.bg-accent { background-color: var(--color-accent); }
+.hover-bg-accent:hover { background-color: var(--color-accent-hover); }
 
-body {
 
+html {
+  transition: background-color 0.3s, color 0.3s;
 }
