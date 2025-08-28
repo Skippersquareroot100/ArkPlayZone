@@ -1,19 +1,16 @@
 {
-  "name": "nuxt-app",
-  "type": "module",
+  "name": "nuxt-routing",
   "private": true,
+  "type": "module",
   "scripts": {
+    "dev": "nuxt dev",
     "build": "nuxt build",
-    "dev": "PORT=9000 nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "preview": "nuxt preview"
   },
   "dependencies": {
-    "axios": "^1.11.0",
-    "nuxt": "^4.0.3",
-    "react-router-dom": "^7.8.2",
-    "vue": "^3.5.18",
-    "vue-router": "^4.5.1"
+    "@tailwindcss/vite": "^4.1.12",
+    "nuxt": "latest",
+    "tailwindcss": "^4.1.12"
   }
 }
