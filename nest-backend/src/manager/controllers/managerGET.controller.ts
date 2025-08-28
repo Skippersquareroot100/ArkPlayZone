@@ -1,12 +1,22 @@
-import { Body, Controller, Get, Query, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { StaffDetailsService } from '../services/staffDetails.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 import { MobileActivityService } from '../services/mobileActivity.service';
 
 @Controller('manager')
 export class ManagerGETController {
-  constructor(private staffDetailsService: StaffDetailsService,
-    private mobileActivityService: MobileActivityService
+  constructor(
+    private staffDetailsService: StaffDetailsService,
+    private mobileActivityService: MobileActivityService,
   ) {}
 
   @Get('details')
@@ -33,7 +43,7 @@ export class ManagerGETController {
     };
   }
 
-   @Get('activity')
+  @Get('activity')
   async getAllActivities() {
     const activities = await this.mobileActivityService.getAllActivities();
 
@@ -42,5 +52,9 @@ export class ManagerGETController {
       data: activities,
     };
   }
-}
 
+  @Get('details/:id')
+  async getStaffByID(@Param('id', ParseIntPipe) id: number) {
+     return await this.staffDetailsService.getStaffByID(id);
+  }
+}
