@@ -57,17 +57,15 @@ export class customer_dto {
   @IsNotEmpty()
   username: string;
 
-  @IsNotEmpty()
-  @IsNumberString(
-    {},
-    {
-      message: 'Phone number must contain only numbers',
-    },
-  )
-  @Length(11, 11, {
-    message: 'Phone number must be 14 digits ',
-  })
-  phone_number: string;
+
+    @IsNotEmpty()
+    @IsNumberString({}, {
+    message: 'Phone number must contain only numbers',
+    })
+    @Length(11,11,{
+        message : "Phone number must be 11 digits ",
+    })
+    phone_number: string;
 
   @IsNotEmpty()
   @IsString()

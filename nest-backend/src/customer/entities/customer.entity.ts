@@ -23,7 +23,7 @@ export class Customer {
   @PrimaryGeneratedColumn()
   customer_id: number;
 
-  @Column()
+  @Column({unique: true})
   email: string;
 
   @Column()

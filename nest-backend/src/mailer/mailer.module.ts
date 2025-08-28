@@ -4,6 +4,7 @@ import { MailerController as MailController } from './mailer.controller';
 import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
+
   imports: [
     MailerModule.forRoot({
       transport: {
@@ -18,6 +19,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
       },
     }),
   ],
+
   providers: [MailService],
   controllers: [MailController],
   exports: [MailService],
