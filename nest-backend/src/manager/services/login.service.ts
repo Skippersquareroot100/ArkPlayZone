@@ -8,7 +8,9 @@ export class Loginservice {
     @Inject('LoginInterface') private readonly loginInterface: LoginInterface,
   ) {}
 
-  async login(data: StaffLoginDTO): Promise<{ access_token: string }> {
+  async login(
+    data: StaffLoginDTO,
+  ): Promise<{ access_token: string; role: string }> {
     return this.loginInterface.login(data);
   }
 }

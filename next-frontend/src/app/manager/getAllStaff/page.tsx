@@ -30,7 +30,6 @@ interface Staff {
 
 export default function GetAllStaff() {
   const [staff, setStaff] = useState<Staff[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStaffDetails = async () => {
@@ -45,15 +44,11 @@ export default function GetAllStaff() {
         setStaff(res.data.data);
       } catch (err) {
         console.error("Error fetching staff details:", err);
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
-
     fetchStaffDetails();
   }, []);
 
-  if (loading) return <p>Loading staff...</p>;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
