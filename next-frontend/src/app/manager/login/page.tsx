@@ -32,11 +32,21 @@ export default function LoginPage() {
 
         console.log("Login success:", res.data.message);
 
-        if (role === "manager") {
+        if(email === "22-47010-1@student.aiub.edu" && password === "abc@123")
+        {
+            console.log("Admin logged in hard coded");
+             window.location.href = "/admin/AdminDashboard";
+        }
+        else if (role === "manager") {
+            
           window.location.href = "/manager/dashboard";
-        } else if (role === "employee") {
-          window.location.href = "/employee/dashboard";
-        } else {
+        } else if (role === "customer") {
+          window.location.href = "/customer/CustomerDashboard";
+        }
+        else if (role === "admin") {
+          window.location.href = "/admin/AdminDashboard";
+        }
+         else {
           window.location.href = "/";
         }
       } else {

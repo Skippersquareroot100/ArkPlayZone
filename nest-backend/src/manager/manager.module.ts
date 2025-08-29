@@ -42,6 +42,8 @@ import { StaffOTPImplementation } from './services/implementations/staffOTP.impl
 import { UpdateStaffImplementation } from './services/implementations/updateStaff.implementation';
 import { MobileActivityService } from './services/mobileActivity.service';
 import { MobileActivity } from './entities/mobileActivity.entity';
+import { Customer } from 'src/customer/entities/customer.entity';
+import { CustomerCredentials } from 'src/customer/entities/customercredentials.entity';
 
 @Module({
   imports: [
@@ -61,7 +63,9 @@ import { MobileActivity } from './entities/mobileActivity.entity';
       Staff,
       StaffOTP,
       StaffFinancial,
-      MobileActivity, 
+      MobileActivity,
+      Customer,
+      CustomerCredentials,
     ]),
     MailModule,
     AuthModule,
