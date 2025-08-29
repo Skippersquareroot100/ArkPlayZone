@@ -16,7 +16,7 @@ import { ManagerModule } from './manager/manager.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
-      port: 5433,
+      port: 5432,
       username: 'postgres',
       password: '12345',
       database: 'ArkPlayZone_DB',

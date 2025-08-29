@@ -14,10 +14,12 @@ export class LoginImplementation implements LoginInterface {
     private readonly staffRepository: Repository<Staff>,
     private readonly authService: AuthService,
   ) {}
-  async login(data: StaffLoginDTO): Promise<{ access_token: string }> {
+  async login(
+    data: StaffLoginDTO,
+  ): Promise<{ access_token: string; role: string }> {
     const staff = await this.staffRepository.findOne({
       where: { email: data.email },
-      select: ['staff_id', 'email', 'password'],
+      select: ['staff_id', 'email', 'password', 'role'],
     });
 
     if (!staff || !staff.password) {
@@ -34,6 +36,6 @@ export class LoginImplementation implements LoginInterface {
       email: staff.email,
     });
 
-    return { access_token: token };
+    return { access_token: token, role: staff.role };
   }
 }

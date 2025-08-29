@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+
 /* Day colors (default) */
 :root {
   --color-bg: #D7E0C5;       /* Pale Sage */
@@ -27,6 +28,11 @@
 .hover-bg-accent:hover { background-color: var(--color-accent-hover); }
 
 
-html {
+html, body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
   transition: background-color 0.3s, color 0.3s;
+  min-height: 100%;
 }
+
+

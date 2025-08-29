@@ -33,7 +33,7 @@ export default function StaffDetails() {
   const params = useParams();
   const { id } = params; 
   const [staff, setStaff] = useState<Staff | null>(null);
-  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const fetchStaff = async () => {
@@ -43,14 +43,14 @@ export default function StaffDetails() {
       } catch (err) {
         console.error("Error fetching staff:", err);
       } finally {
-        setLoading(false);
+       
       }
     };
 
     fetchStaff();
   }, [id]);
 
-  if (loading) return <p>Loading staff details...</p>;
+ 
   if (!staff) return <p>No staff found!</p>;
 
   return (

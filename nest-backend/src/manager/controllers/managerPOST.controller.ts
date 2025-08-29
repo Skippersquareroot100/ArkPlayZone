@@ -93,6 +93,7 @@ export class ManagerController {
         message: 'Login successful',
         error: '',
         token: token.access_token,
+        role: token.role,
       };
     } catch (error) {
       if (error instanceof HttpException) {
@@ -101,6 +102,7 @@ export class ManagerController {
           message: '',
           error: error.message,
           token: '',
+          role: '',
         };
       }
       return {
@@ -108,6 +110,7 @@ export class ManagerController {
         message: '',
         error: 'Internal server error',
         token: '',
+        role: '',
       };
     }
   }
