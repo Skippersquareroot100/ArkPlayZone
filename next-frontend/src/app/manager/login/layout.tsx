@@ -8,7 +8,6 @@ export default function LoginLayout({
 
   return (
     <div className="min-h-screen bg-theme text-theme p-6 ">
-      
       <header className="flex">
         <Image
           src="/assets/photos/logo.png"
@@ -19,7 +18,6 @@ export default function LoginLayout({
           className="h-14 w-auto"
         />
         <h1 className="text-4xl font-bold mt-5">ARK PLAYZONE</h1>
-      
       </header>
         {children}
       <footer >

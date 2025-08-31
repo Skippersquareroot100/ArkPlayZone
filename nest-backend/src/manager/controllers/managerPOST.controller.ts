@@ -5,6 +5,7 @@ import {
   HttpException,
   HttpStatus,
   Post,
+  Res,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -24,6 +25,7 @@ import { RefreshTokenService } from '../services/refreshToken.service';
 import { StaffOTPService } from '../services/staffOTP.service';
 import { MobileActivityDto } from '../DTOs/mobileActivity.dto';
 import { MobileActivityService } from '../services/mobileActivity.service';
+import { Response } from 'express';
 
 @Controller('manager')
 export class ManagerController {
@@ -85,9 +87,14 @@ export class ManagerController {
   }
 
   @Post(':staff-login')
-  async login(@Body() stafflogin: StaffLoginDTO) {
+  async login(
+    @Body() stafflogin: StaffLoginDTO,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    console.log('Logging in staff:', stafflogin);
     try {
       const token = await this.loginservice.login(stafflogin);
+
       return {
         statusCode: 200,
         message: 'Login successful',

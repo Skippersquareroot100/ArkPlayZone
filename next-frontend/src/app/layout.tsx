@@ -1,7 +1,11 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import StartupLoader from "@/components/StartupLoader";
+import Script from "next/script";
+import { RouteLogger } from "@/components/RouteLogger";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,32 +24,33 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+      
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              try {
                 const theme = localStorage.getItem("theme");
                 if (theme === "dark" || (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
                   document.documentElement.classList.add("dark");
-                } else {
-                  document.documentElement.classList.remove("dark");
                 }
-              })();
-            `,
-          }}
-        />
-      </head>
-       <body className="antialiased">
+              } catch (_) {}
+            })();
+          `
+        }} />
+
+        
         <StartupLoader>
+          <RouteLogger/>
           {children}
         </StartupLoader>
-        
       </body>
     </html>
   );

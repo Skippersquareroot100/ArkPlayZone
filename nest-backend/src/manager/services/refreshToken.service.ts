@@ -28,6 +28,7 @@ export class RefreshTokenService {
     const token = this.authService.generateToken({
       id: staff.staff_id,
       email: staff.email,
+      role: staff.role,
     });
 
     return { access_token: token };
