@@ -8,7 +8,7 @@ export default function Logout() {
   useEffect(() => {
     localStorage.removeItem("role");
     localStorage.removeItem("jwt");
-    router.push("/");
+    router.push("/login");
   }, []);
 
   return null;

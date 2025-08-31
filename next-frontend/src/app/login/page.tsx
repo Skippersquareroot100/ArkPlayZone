@@ -2,11 +2,23 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import api from "@/app/lib/axios";
+import { delay } from "@/app/utils/delays";
 
 export default function LoginPage() {
   const [darkMode, setDarkMode] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
+  const [visible, setVisible] = useState(false);
+
+  const showToast = (message: string, type: "success" | "error") => {
+    setToast({ message, type });
+    setVisible(true);
+    setTimeout(() => setVisible(false), 3000);
+  };
 
   useEffect(() => {
     const saved = localStorage.getItem("theme");
@@ -32,28 +44,28 @@ export default function LoginPage() {
 
         console.log("Login success:", res.data.message);
 
-        if(email === "22-47010-1@student.aiub.edu" && password === "abc@123")
-        {
-            console.log("Admin logged in hard coded");
-             window.location.href = "/admin/AdminDashboard";
-        }
-        else if (role === "manager") {
-            
+        if (email === "22-47010-1@student.aiub.edu" && password === "abc@123") {
+          showToast("Login successful!", "success");
+          delay(6).then(() => {
+            window.location.href = "/admin/AdminDashboard";
+          });
+        } else if (role === "manager") {
+          showToast("Login successful!", "success");
           window.location.href = "/manager/dashboard";
         } else if (role === "customer") {
+          showToast("Login successful!", "success");
           window.location.href = "/customer/CustomerDashboard";
-        }
-        else if (role === "admin") {
+        } else if (role === "admin") {
+          showToast("Login successful!", "success");
           window.location.href = "/admin/AdminDashboard";
-        }
-         else {
-          window.location.href = "/";
+        } else {
+          window.location.href = "/login";
         }
       } else {
-        console.error("Login error:", res.data.error);
+        showToast("Invalid credentials!", res.data.error);
       }
     } catch (err) {
-      console.error("Login failed:", err.response?.data || err.message);
+      showToast("Invalid credentials!", err.response?.data || err.message);
     }
   };
 
@@ -107,7 +119,10 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="mt-6 rounded-lg w-full p-2 text-white bg-accent hover:bg-accent/80 transition"
+            className="px-6 py-3 w-full rounded-lg font-medium text-white
+             bg-gradient-to-b from-[var(--color-accent-hover)] to-[var(--color-text)] 
+             hover:from-[var(--color-text)] hover:to-[var(--color-accent-hover)] 
+             transition transform active:-translate-y-1"
           >
             Login
           </button>
@@ -130,6 +145,19 @@ export default function LoginPage() {
           </p>
         </div>
       </div>
+
+      {toast && (
+        <div
+          className={`
+      fixed bottom-28 -left-3 px-20 py-5 rounded-lg shadow-lg text-white
+      ${toast.type === "success" ? "bg-green-500" : "bg-red-500"}
+      transform transition-all duration-500 ease-in-out
+      ${visible ? "translate-x-0 opacity-100" : "-translate-x-40 opacity-0"}
+    `}
+        >
+          {toast.message}
+        </div>
+      )}
     </main>
   );
 }
