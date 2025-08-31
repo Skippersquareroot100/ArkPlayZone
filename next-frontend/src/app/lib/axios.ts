@@ -1,6 +1,8 @@
-import axios from "axios";
+import axios from 'axios';
+
 const api = axios.create({
-    baseURL : "http://localhost:10000",
+  baseURL: process.env.NEXT_PUBLIC_API_BASE, 
+  withCredentials: true, 
 });
 
 export default api;

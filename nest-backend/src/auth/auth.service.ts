@@ -6,13 +6,19 @@ import * as bcrypt from 'bcrypt';
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
-  generateToken(user: { id: number; email: string }) {
-    const payload = { id: user.id, email: user.email };
+   // Generate JWT with role
+  generateToken(user: { id: number; email: string; role: string }) {
+    const payload = { sub: user.id, email: user.email, role: user.role };
     return this.jwtService.sign(payload);
   }
 
+  // Verify JWT
   verifyToken(token: string) {
-    return this.jwtService.verify(token);
+    try {
+      return this.jwtService.verify(token);
+    } catch {
+      throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
+    }
   }
   // swajan Barua  [ 22-46838-1 ]
   async hash_password(password: string) : Promise<string>{

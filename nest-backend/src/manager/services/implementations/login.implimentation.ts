@@ -56,6 +56,7 @@ export class LoginImplementation implements LoginInterface {
       const customer_token = this.authService.generateToken({
         id: customer.customer_id ?? 123,
         email: customer.email ?? '',
+         role: 'customer',
       });
       return { access_token: customer_token, role: 'customer' };
     }
@@ -68,6 +69,7 @@ export class LoginImplementation implements LoginInterface {
     const token = this.authService.generateToken({
       id: staff.staff_id,
       email: staff.email,
+      role: staff.role,
     });
 
     return { access_token: token, role: staff.role };
