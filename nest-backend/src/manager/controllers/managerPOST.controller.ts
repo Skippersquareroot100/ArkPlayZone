@@ -79,6 +79,8 @@ export class ManagerController {
 
       await this.managerService.createStaff(dto, dto.file ?? '');
       return {
+        
+        statusCode: 201,
         message: 'Staff created successfully',
       };
     } catch (error) {

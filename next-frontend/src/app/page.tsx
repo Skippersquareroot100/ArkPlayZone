@@ -1,35 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { redirect, useRouter } from "next/navigation";
-import LoginPage from "./manager/login/page";
-import { getURL } from "next/dist/shared/lib/utils";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-
   const router = useRouter();
-  const storedRole = localStorage.getItem("role"); 
-  const [role, setRole] = useState<string | null>(null);
-
-  console.log("path:", getURL());
-
-  useEffect(()=>{
-
-    const storedRole = localStorage.getItem("role");
-    setRole(storedRole);
-
-  },[])
-
 
   useEffect(() => {
-     if (role === null) return;
-   
-    if (!role) {
-      router.replace("/manager/login"); 
+    const storedRole = localStorage.getItem("role");
+
+    if (!storedRole) {
+      router.replace("/login");
       return;
     }
 
-    switch (role) {
+
+    switch (storedRole) {
       case "manager":
         router.replace("/manager/dashboard");
         break;
@@ -40,13 +26,9 @@ export default function Home() {
         router.replace("/admin/AdminDashboard");
         break;
       default:
-      
+        router.replace("/login"); 
     }
-  }, [role, router]);
-
-   
-
-  if (role) return null;
+  }, [router]);
 
   return null;
 }
