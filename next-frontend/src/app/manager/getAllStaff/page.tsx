@@ -1,6 +1,4 @@
-"use client";
 import api from "@/app/lib/axios";
-import { useEffect, useState } from "react";
 import Link from "next/link";
 
 interface Staff {
@@ -28,26 +26,24 @@ interface Staff {
   };
 }
 
-export default function GetAllStaff() {
-  const [staff, setStaff] = useState<Staff[]>([]);
+async function apicall(): Promise<Staff[]> {
+  try {
+    const res = await api.get("/manager/details", {
+      params: { role: "staff", page: 1, limit: 20 }
+    });
+    return res.data.data;
+  } catch (err) {
+    console.error("Error fetching staff details:", err);
+    return [];
+  }
+}
 
-  useEffect(() => {
-    const fetchStaffDetails = async () => {
-      try {
-        const res = await api.get("/manager/details", {
-          params: {
-            role: "staff",
-            page: 1,
-            limit: 20,
-          },
-        });
-        setStaff(res.data.data);
-      } catch (err) {
-        console.error("Error fetching staff details:", err);
-      } 
-    };
-    fetchStaffDetails();
-  }, []);
+ 
+
+export default async function GetAllStaff() {
+
+
+  const staff = await apicall();
 
 
   return (

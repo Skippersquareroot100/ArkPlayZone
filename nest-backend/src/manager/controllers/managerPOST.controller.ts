@@ -73,18 +73,19 @@ export class ManagerController {
     @Body() dto: StaffDto,
   ) {
     try {
-      if (file) {
-        dto.file = file.filename;
-      }
-
+      if (file) dto.file = file.filename;
       await this.managerService.createStaff(dto, dto.file ?? '');
       return {
-        
         statusCode: 201,
         message: 'Staff created successfully',
       };
     } catch (error) {
-      throw new HttpException('Error creating staff', HttpStatus.BAD_REQUEST);
+      console.error(error);
+      return {
+        statusCode: error.getStatus(),
+        message: error.response?.message || 'Staff creation failed',
+        error: 'Staff creation failed',
+      };
     }
   }
 
