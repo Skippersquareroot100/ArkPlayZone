@@ -61,7 +61,7 @@ export default function StaffDetails() {
 
       <div className="flex items-center gap-4 mb-6">
         <img
-          src={`http://localhost:10000/uploads/${staff.photo}`} // adjust if your backend serves photos differently
+          src={`http://localhost:10000/uploads/${staff.photo}`} 
           alt={staff.name.firstName}
           className="w-24 h-24 rounded-full object-cover border"
         />

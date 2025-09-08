@@ -1,12 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
 import api from "@/app/lib/axios";
-import { delay } from "@/app/utils/delays";
 
 export default function RegistrationPage() {
   const [darkMode, setDarkMode] = useState(false);
 
-  // Form states
   const [firstName, setFirstName] = useState("");
   const [middleName, setMiddleName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -25,7 +23,6 @@ export default function RegistrationPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [file, setFile] = useState<File | null>(null);
 
-  // Toast
   const [toast, setToast] = useState<{
     message: string;
     type: "success" | "error";
@@ -80,63 +77,93 @@ export default function RegistrationPage() {
       return;
     }
 
+    const nameRegex = /^[a-zA-Z]+$/;
+    if (
+      !nameRegex.test(firstName) ||
+      (middleName && !nameRegex.test(middleName)) ||
+      !nameRegex.test(lastName)
+    ) {
+      showToast("Name must contain only letters", "error");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      showToast("Please enter a valid email address!", "error");
+      return;
+    }
+
+    const phoneRegex = /^01\d{9}$/;
+    if (!phoneRegex.test(phone)) {
+      showToast(
+        "Phone number must be 11 digits long and start with 01!",
+        "error"
+      );
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[@#$&]).{6,}$/;
+    if (!passwordRegex.test(password)) {
+      showToast(
+        "Password must contain at least one lowercase letter, one special character (@, #, $, &) and be at least 6 characters long.",
+        "error"
+      );
+      return;
+    }
+
     if (password !== confirmPassword) {
       showToast("Passwords do not match!", "error");
       return;
     }
 
     try {
-      const formData = new FormData();
-      formData.append("firstName", firstName);
-      formData.append("middleName", middleName);
-      formData.append("lastName", lastName);
-      formData.append("apartment_name", apartmentName);
-      formData.append("street_name", streetName);
-      formData.append("street_no", String(streetNo));
-      formData.append("city", city);
-      formData.append("postal_code", String(postalCode));
-      formData.append("salary", String(salary));
-      formData.append("role", role);
-      formData.append("email", email);
-      formData.append("phone", phone);
-      formData.append("password", password);
-      formData.append("deduction", String(deduction));
-      formData.append("overtime", String(overtime));
-      if (file) formData.append("file", file);
-
-      const res = await api.post("/manager/create-staff", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await api.post(
+        "/manager/create-staff",
+        {
+          firstName,
+          middleName,
+          lastName,
+          apartment_name: apartmentName,
+          street_name: streetName,
+          street_no: streetNo,
+          city,
+          postal_code: postalCode,
+          salary,
+          role,
+          email,
+          phone,
+          password,
+          deduction,
+          overtime,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true, 
+        }
+      );
 
       if (res.data.statusCode === 201) {
         showToast("Staff registered successfully!", "success");
-
         window.location.href = "/manager/dashboard";
       } else {
-        showToast(res.data.error || "Registration failed!", "error");
+        showToast(res.data.message || "Registration failedjjjj!", "error");
       }
     } catch (err: any) {
-      let errorMessages: string[] = [];
-
-      if (Array.isArray(err.response?.data?.message)) {
-        errorMessages = err.response.data.message;
-      } else if (typeof err.response?.data?.errors === "object") {
-        errorMessages = Object.values(err.response.data.errors).flat();
+      console.error("Axios error:", err);
+      if (err.response) {
+        showToast(
+          err.response.data?.message || "Registration failed!pp",
+          "error"
+        );
+      } else if (err.request) {
+        showToast("No response from server. Please try again.", "error");
       } else {
-        errorMessages = [
-          err.response?.data?.message ||
-            err.response?.data?.error ||
-            err.message ||
-            "Something went wrong!",
-        ];
+        showToast(err.message || "Registration failed!", "error");
       }
-
-      errorMessages.forEach((msg, i) => {
-        setTimeout(() => {
-          showToast(String(msg), "error");
-        }, i * 400);
-      });
     }
+
   };
 
   return (
@@ -186,7 +213,6 @@ export default function RegistrationPage() {
             </div>
           </div>
 
-          {/* Address fields */}
           <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium">
@@ -249,18 +275,17 @@ export default function RegistrationPage() {
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="+8801XXXXXXXXX"
+                placeholder="01XXXXXXXXX"
                 className="mt-1 w-full px-4 py-2 rounded-lg border border-theme bg-card focus:outline-none focus:ring-2 focus:ring-accent"
               />
             </div>
           </div>
 
-          {/* Email, Salary, Role */}
           <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium">Email</label>
               <input
-                type="email"
+                type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
@@ -290,7 +315,6 @@ export default function RegistrationPage() {
             </div>
           </div>
 
-          {/* Passwords */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium">Password</label>
@@ -316,7 +340,6 @@ export default function RegistrationPage() {
             </div>
           </div>
 
-          {/* File upload */}
           <div>
             <label className="block text-sm font-medium">Upload Photo</label>
             <input
@@ -328,10 +351,12 @@ export default function RegistrationPage() {
 
           <button
             type="submit"
-            className=" w-full px-6 py-3 rounded-lg font-medium text-white
-             bg-gradient-to-b from-[var(--color-accent-hover)] to-[var(--color-text)] 
-             hover:from-[var(--color-text)] hover:to-[var(--color-accent-hover)] 
-             transition transform active:-translate-y-1"
+            className="w-full px-6 py-3 rounded-lg font-medium text-white
+            bg-gradient-to-b from-[var(--color-accent-hover)] to-[var(--color-text)]
+            hover:from-[var(--color-text)] hover:to-[var(--color-accent-hover)]
+            transition transform active:-translate-y-1"
+             
+
           >
             Register Staff
           </button>
