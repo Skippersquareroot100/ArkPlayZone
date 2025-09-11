@@ -44,6 +44,9 @@ import { MobileActivityService } from './services/mobileActivity.service';
 import { MobileActivity } from './entities/mobileActivity.entity';
 import { Customer } from 'src/customer/entities/customer.entity';
 import { CustomerCredentials } from 'src/customer/entities/customercredentials.entity';
+import { PostNotification } from './entities/postNotification';
+import { PostNotificationService } from './services/postNotification.service';
+import { NotificationModule } from './pusher(dev-anik)/notification.module';
 
 @Module({
   imports: [
@@ -66,9 +69,11 @@ import { CustomerCredentials } from 'src/customer/entities/customercredentials.e
       MobileActivity,
       Customer,
       CustomerCredentials,
+      PostNotification,
     ]),
     MailModule,
     AuthModule,
+    NotificationModule,
   ],
   controllers: [
     ManagerController,
@@ -130,6 +135,7 @@ import { CustomerCredentials } from 'src/customer/entities/customercredentials.e
       useClass: SalaryImplementation,
     },
     MobileActivityService,
+    PostNotificationService,
   ],
 })
 export class ManagerModule {}

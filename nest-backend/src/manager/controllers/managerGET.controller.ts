@@ -11,12 +11,14 @@ import {
 import { StaffDetailsService } from '../services/staffDetails.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 import { MobileActivityService } from '../services/mobileActivity.service';
+import { PostNotificationService } from '../services/postNotification.service';
 
 @Controller('manager')
 export class ManagerGETController {
   constructor(
     private staffDetailsService: StaffDetailsService,
     private mobileActivityService: MobileActivityService,
+    private postNotificationService: PostNotificationService,
   ) {}
 
   @Get('details')
@@ -55,6 +57,19 @@ export class ManagerGETController {
 
   @Get('details/:id')
   async getStaffByID(@Param('id', ParseIntPipe) id: number) {
-     return await this.staffDetailsService.getStaffByID(id);
+    return await this.staffDetailsService.getStaffByID(id);
+  }
+
+  @Get('notifications/:whom')
+  async getAllNotifications(@Param('whom') whom: string) {
+    try {
+      return await this.postNotificationService.getAllNotifications(whom);
+    } catch (error) {
+      return {
+        statusCode: error.getStatus(),
+        message: error.response?.message || 'notification fetch failed',
+        error: 'no notification found',
+      };
+    }
   }
 }

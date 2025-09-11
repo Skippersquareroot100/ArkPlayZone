@@ -10,7 +10,6 @@ export default function Home() {
   useEffect(() => {
     const storedRole = localStorage.getItem("role");
 
-    // Service Worker + Notifications
     if ("serviceWorker" in navigator && "Notification" in window) {
       navigator.serviceWorker
         .register("/service-worker.js")
@@ -28,13 +27,12 @@ export default function Home() {
         .then((registration) => {
           if (!registration) return;
 
-          // Local notification
+
           registration.showNotification("Welcome!", {
             body: "You have successfully subscribed to push notifications!",
             icon: "/favicon.ico",
           });
 
-          // Pusher Beams setup
         
         })
         .catch((err) =>
@@ -42,11 +40,13 @@ export default function Home() {
         );
     }
 
-    // Role-based routing
+     console.log("reload!!");
     if (!storedRole) {
       router.replace("/login");
       return;
     }
+
+    
 
     switch (storedRole) {
       case "manager":
