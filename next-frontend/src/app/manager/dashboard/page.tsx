@@ -7,7 +7,8 @@ export default function ManagerDashboard() {
       <nav>
         <Link href="/manager/getAllStaff">View Staff</Link> <br />
         <Link href="/logout">Logout</Link> <br />
-        <Link href="/manager/registration">Register Staff</Link>
+        <Link href="/manager/registration">Register Staff</Link> <br />
+        <Link href="/manager/postNotification">Notification</Link>
       </nav>
     </div>
   );

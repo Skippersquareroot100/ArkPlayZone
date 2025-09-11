@@ -12,7 +12,7 @@ export class MobileActivityService {
   constructor(
     @InjectRepository(MobileActivity)
     private activityRepository: Repository<MobileActivity>,
-  ) {}
+  ) { }
 
   async createActivity(file: Express.Multer.File, dto: MobileActivityDto) {
     const activity = this.activityRepository.create({
@@ -24,7 +24,7 @@ export class MobileActivityService {
     return activity;
   }
 
- async getAllActivities(): Promise<
+  async getAllActivities(): Promise<
     { name: string; description: string; photo: string | null }[]
   > {
     const activities = await this.activityRepository.find();

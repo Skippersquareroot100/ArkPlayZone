@@ -26,6 +26,8 @@ import { StaffOTPService } from '../services/staffOTP.service';
 import { MobileActivityDto } from '../DTOs/mobileActivity.dto';
 import { MobileActivityService } from '../services/mobileActivity.service';
 import { Response } from 'express';
+import { PostNotificationDto } from '../DTOs/postNotification.dto';
+import { PostNotificationService } from '../services/postNotification.service';
 
 @Controller('manager')
 export class ManagerController {
@@ -36,6 +38,7 @@ export class ManagerController {
     private readonly staffOTPService: StaffOTPService,
     private readonly passResetService: PassResetService,
     private readonly mobileActivityService: MobileActivityService,
+    private readonly postNotificationService: PostNotificationService,
   ) {}
 
   @Get('hello')
@@ -221,5 +224,22 @@ export class ManagerController {
     @Body() dto: MobileActivityDto,
   ) {
     await this.mobileActivityService.createActivity(file, dto);
+  }
+
+  @Post('post-notification')
+  async createPostNotification(@Body() dto: PostNotificationDto) {
+    await this.postNotificationService.postNotification(dto);
+    try {
+      return {
+        statusCode: 201,
+        message: 'Notification posted successfully',
+      };
+    } catch (error) {
+      return {
+        statusCode: error.getStatus(),
+        message: error.response?.message || 'Notification creation failed',
+        error: 'notification creation failed',
+      };
+    }
   }
 }

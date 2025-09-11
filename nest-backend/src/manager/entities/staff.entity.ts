@@ -16,6 +16,7 @@ import { Shift } from './shift.entity';
 import { Activity } from '../../admin/entities/activity.entity';
 import { StaffOTP } from './staffOTP.entity';
 import { StaffFinancial } from './staffFinancial.entity';
+import { PusherNotificationMapper } from './pusherNotificationMapper';
 
 @Entity()
 export class Staff {
@@ -58,7 +59,9 @@ export class Staff {
   @JoinColumn({ name: 'ad_id' })
   address: Address;
 
-  @OneToMany(() => Incident, (incident) => incident.staff,{onDelete: 'CASCADE'})
+  @OneToMany(() => Incident, (incident) => incident.staff, {
+    onDelete: 'CASCADE',
+  })
   incidents: Incident[];
 
   @ManyToMany(() => Shift, (shift) => shift.staffs, {
@@ -82,4 +85,10 @@ export class Staff {
     cascade: true,
   })
   financialRecords: StaffFinancial[];
+
+  @OneToMany(
+    () => PusherNotificationMapper,
+    (pusherNotificationMapper) => pusherNotificationMapper.staff,
+  )
+  mapper: PusherNotificationMapper[];
 }
