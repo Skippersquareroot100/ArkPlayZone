@@ -5,12 +5,13 @@ import { PusherService } from './pusher.service';
 import { PusherNotification } from '../entities/pusherNotification.entity';
 import { PusherNotificationMapper } from '../entities/pusherNotificationMapper';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PusherAuthController } from './pusher-auth.controller';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([PusherNotification, PusherNotificationMapper]),
   ],
-  controllers: [NotificationController],
+  controllers: [NotificationController, PusherAuthController],
   providers: [NotificationPusherService, PusherService],
 })
 export class NotificationModule {}

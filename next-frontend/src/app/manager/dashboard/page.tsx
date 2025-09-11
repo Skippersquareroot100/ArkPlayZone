@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 export default function ManagerDashboard() {
+  
   return (
     <div>
       <h1>Manager Dashboard</h1>
@@ -8,7 +9,9 @@ export default function ManagerDashboard() {
         <Link href="/manager/getAllStaff">View Staff</Link> <br />
         <Link href="/logout">Logout</Link> <br />
         <Link href="/manager/registration">Register Staff</Link> <br />
-        <Link href="/manager/postNotification">Notification</Link>
+        <Link href="/manager/postNotification">Post Notification</Link> <br />
+        <Link href="/manager/notification">Notification</Link> <br />
+
       </nav>
     </div>
   );

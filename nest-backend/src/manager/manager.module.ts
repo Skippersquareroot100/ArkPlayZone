@@ -47,6 +47,7 @@ import { CustomerCredentials } from 'src/customer/entities/customercredentials.e
 import { PostNotification } from './entities/postNotification';
 import { PostNotificationService } from './services/postNotification.service';
 import { NotificationModule } from './pusher(dev-anik)/notification.module';
+import { GetIdService } from './services/getId.service';
 
 @Module({
   imports: [
@@ -136,6 +137,7 @@ import { NotificationModule } from './pusher(dev-anik)/notification.module';
     },
     MobileActivityService,
     PostNotificationService,
+    GetIdService,
   ],
 })
 export class ManagerModule {}

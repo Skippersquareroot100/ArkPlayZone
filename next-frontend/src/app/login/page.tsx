@@ -38,9 +38,13 @@ export default function LoginPage() {
       if (res.data.statusCode === 200) {
         const token = res.data.token;
         const role = res.data.role;
+        const id = res.data.id;
 
         localStorage.setItem("jwt", token);
         localStorage.setItem("role", role);
+        localStorage.setItem("id", id);
+
+       
 
         console.log("Login success:", res.data.message);
 

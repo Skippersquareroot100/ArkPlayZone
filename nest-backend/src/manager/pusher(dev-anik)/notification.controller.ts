@@ -11,6 +11,7 @@ export class NotificationController {
 
   @Post()
   async create(@Body() dto: CreateNotificationDto) {
+    console.log('Received DTO:', dto);
     return this.notificationService.createNotification(
       dto.title,
       dto.message,
@@ -29,5 +30,10 @@ export class NotificationController {
     @Param('notificationId') notificationId: number,
   ) {
     return this.notificationService.markAsRead(staffId, notificationId);
+  }
+
+  @Post('staff/:staffId/read-all')
+  async markAllAsRead(@Param('staffId') staffId: number) {
+    return this.notificationService.markAllAsRead(staffId);
   }
 }

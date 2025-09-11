@@ -12,6 +12,7 @@ import { StaffDetailsService } from '../services/staffDetails.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 import { MobileActivityService } from '../services/mobileActivity.service';
 import { PostNotificationService } from '../services/postNotification.service';
+import { GetIdService } from '../services/getId.service';
 
 @Controller('manager')
 export class ManagerGETController {
@@ -19,6 +20,7 @@ export class ManagerGETController {
     private staffDetailsService: StaffDetailsService,
     private mobileActivityService: MobileActivityService,
     private postNotificationService: PostNotificationService,
+    private getIdService: GetIdService,
   ) {}
 
   @Get('details')
@@ -71,5 +73,10 @@ export class ManagerGETController {
         error: 'no notification found',
       };
     }
+  }
+
+  @Get('getId')
+  getId() {
+    return this.getIdService.getId();
   }
 }

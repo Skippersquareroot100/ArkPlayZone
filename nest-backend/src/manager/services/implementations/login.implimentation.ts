@@ -22,7 +22,7 @@ export class LoginImplementation implements LoginInterface {
   ) {}
   async login(
     data: StaffLoginDTO,
-  ): Promise<{ access_token: string; role: string }> {
+  ): Promise<{ access_token: string; role: string; sid?: number }> {
     const staff = await this.staffRepository.findOne({
       where: { email: data.email },
       select: ['staff_id', 'email', 'password', 'role'],
@@ -56,7 +56,7 @@ export class LoginImplementation implements LoginInterface {
       const customer_token = this.authService.generateToken({
         id: customer.customer_id ?? 123,
         email: customer.email ?? '',
-         role: 'customer',
+        role: 'customer',
       });
       return { access_token: customer_token, role: 'customer' };
     }
@@ -72,6 +72,6 @@ export class LoginImplementation implements LoginInterface {
       role: staff.role,
     });
 
-    return { access_token: token, role: staff.role };
+    return { access_token: token, role: staff.role, sid: staff.staff_id };
   }
 }

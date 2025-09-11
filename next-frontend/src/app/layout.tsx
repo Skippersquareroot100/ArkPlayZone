@@ -5,7 +5,7 @@ import "./globals.css";
 import StartupLoader from "@/components/StartupLoader";
 import Script from "next/script";
 import { RouteLogger } from "@/components/RouteLogger";
-
+import GlobalNotification from "@/components/GolbalNotification";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,19 +27,14 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
-
-
   return (
-
-           
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-      
-        <script dangerouslySetInnerHTML={{
-          __html: `
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
             (function() {
               try {
                 const theme = localStorage.getItem("theme");
@@ -48,14 +43,15 @@ export default function RootLayout({
                 }
               } catch (_) {}
             })();
-          `
-        }} />
-           
-           
+          `,
+          }}
+        />
+
         <StartupLoader>
-           <RouteLogger>
+          <RouteLogger>
+            <GlobalNotification/>
             {children}
-        </RouteLogger>
+          </RouteLogger>
         </StartupLoader>
       </body>
     </html>
