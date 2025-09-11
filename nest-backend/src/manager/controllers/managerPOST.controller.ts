@@ -107,6 +107,7 @@ export class ManagerController {
         error: '',
         token: token.access_token,
         role: token.role,
+        id: token.sid,
       };
     } catch (error) {
       if (error instanceof HttpException) {
@@ -116,6 +117,7 @@ export class ManagerController {
           error: error.message,
           token: '',
           role: '',
+          id: '',
         };
       }
       return {

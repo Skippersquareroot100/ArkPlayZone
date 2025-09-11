@@ -70,4 +70,12 @@ export class NotificationPusherService {
     mapper.isRead = true;
     return this.pusherNotificationMapperRepository.save(mapper);
   }
+
+  async markAllAsRead(staffId: number) {
+    await this.pusherNotificationMapperRepository.update(
+      { staff: { staff_id: staffId } },
+      { isRead: true },
+    );
+    return { success: true };
+  }
 }

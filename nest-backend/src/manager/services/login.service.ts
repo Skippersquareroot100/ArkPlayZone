@@ -10,7 +10,7 @@ export class Loginservice {
 
   async login(
     data: StaffLoginDTO,
-  ): Promise<{ access_token: string; role: string }> {
+  ): Promise<{ access_token: string; role: string ; sid?: number }> {
     return this.loginInterface.login(data);
   }
 }
