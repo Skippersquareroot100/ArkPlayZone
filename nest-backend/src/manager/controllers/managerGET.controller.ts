@@ -33,11 +33,12 @@ export class ManagerGETController {
     return this.staffDetailsService.getStaffDetails(role, page, limit);
   }
 
-  @Get('photos')
-  async getAllPhotos(@Body('email') email: string, @Res() res) {
-    const name = await this.staffDetailsService.getPhotosName(email);
+  @Get('photos/:id')
+  async getAllPhotos(@Param('id') id: number, @Res() res) {
+    const name = await this.staffDetailsService.getPhotosName(id);
     res.sendFile(name, { root: './uploads' });
   }
+
 
   @Get('test-token')
   @UseGuards(JwtAuthGuard)

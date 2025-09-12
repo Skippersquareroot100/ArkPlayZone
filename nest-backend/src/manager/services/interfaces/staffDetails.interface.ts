@@ -11,5 +11,5 @@ export interface StaffDetailsInterface {
     total: number;
     data: Staff[];
   }>;
-  getPhotosName(email: string): Promise<string>;
+  getPhotosName(id: number): Promise<string>;
 }

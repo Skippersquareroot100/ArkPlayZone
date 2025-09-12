@@ -26,8 +26,8 @@ export class StaffDetailsService {
     return this.staffDetailsInterface.getStaffDetails(role, page, limit);
   }
 
-  async getPhotosName(email: string): Promise<string> {
-    return this.staffDetailsInterface.getPhotosName(email);
+  async getPhotosName(id: number): Promise<string> {
+    return this.staffDetailsInterface.getPhotosName(id);
   }
 
   async getStaffByID(id: number): Promise<Staff | null> {
