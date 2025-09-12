@@ -80,4 +80,9 @@ export class ManagerGETController {
   getId() {
     return this.getIdService.getId();
   }
+
+  @Get('staff/:id')
+  getStaffById(@Param('id', ParseIntPipe) id: number) {
+    return this.getIdService.getStaffById(id);
+  }
 }

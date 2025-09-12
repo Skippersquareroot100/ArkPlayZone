@@ -7,5 +7,6 @@ export class ManagerDELETEController {
   @Delete('delete-staff')
   async deleteStaff(@Body('email') email: string ) {
     return this.staffDeleteService.deleteStaffById(email);
+    
   }
 }

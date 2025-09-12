@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Param,
   Put,
   UploadedFile,
   UseGuards,
@@ -17,7 +18,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 @Controller('manager')
 export class ManagerPUTController {
   constructor(private readonly updateStaffService: UpdateStaffService) {}
-  @Put()
+  @Put(':id')
   @UsePipes(
     new ValidationPipe({
       whitelist: true,
@@ -43,13 +44,24 @@ export class ManagerPUTController {
       }),
     }),
   )
+
   async updateManager(
     @Body() data: UpdateStaffDTO,
+    @Param('id') id: string,
     @UploadedFile() file: Express.Multer.File,
   ) {
+    console.log('yes, you access to guard');
     if (file) {
       data.file = file.filename;
     }
-    await this.updateStaffService.updateStaff(data);
+    await this.updateStaffService.updateStaff(data, +id);
+  }
+
+  
+  @UseGuards(JwtAuthGuard)
+  @Put('check')
+  
+  async checkManager() {
+    console.log('yes, you access to guard');
   }
 }
