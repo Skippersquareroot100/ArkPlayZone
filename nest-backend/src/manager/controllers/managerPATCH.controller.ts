@@ -49,6 +49,7 @@ export class ManagerPATCHController {
   @Patch('salary')
   async updateSalary(@Body() data: SalaryDTO) {
     try {
+      console.log(data);
       const result = await this.salaryService.updateSalary(data);
       return {
         statusCode: 200,

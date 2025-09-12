@@ -14,6 +14,7 @@ export class SalaryImplementation implements SalaryInterface {
 
   async updateSalary(data: SalaryDTO): Promise<{ message: string }> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    console.log('data from service:', data);
     const staff = await this.staffRepository.findOne({
       where: { email: data.email },
     });

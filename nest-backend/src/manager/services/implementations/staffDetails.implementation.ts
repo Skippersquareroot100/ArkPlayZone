@@ -44,8 +44,8 @@ export class StaffDetailsImplementation implements StaffDetailsInterface {
     };
   }
 
-  async getPhotosName(email: string): Promise<string> {
-    const staff = await this.staffRepository.findOne({ where: { email } });
+  async getPhotosName(id: number): Promise<string> {
+    const staff = await this.staffRepository.findOne({ where: { staff_id: id } });
     if (!staff) throw new HttpException('Staff not found', 404);
     return staff.photo;
   }
