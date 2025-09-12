@@ -21,9 +21,9 @@ export class UpdateStaffImplementation implements UpdateStaffInterface {
     private readonly streetRepository: Repository<Street>,
   ) {}
 
-  async updateStaff(data: UpdateStaffDTO): Promise<void> {
+  async updateStaff(data: UpdateStaffDTO, id: number): Promise<void> {
     const staff = await this.staffRepository.findOne({
-      where: { email: data.email },
+      where: { staff_id: id },
     });
     if (!staff) {
       throw new HttpException('Staff not found', 404);

@@ -28,4 +28,15 @@ export class GetIdService {
       name: `${staff.name.firstName ?? ''} ${staff.name.middleName ?? ''} ${staff.name.lastName ?? ''}`.trim(),
     }));
   }
+
+   async getStaffById(id: number) {
+    const staff = await this.staffRepository.findOne({
+      where: { staff_id: id },
+      relations: ['name', 'address', 'address.street'],
+    });
+    if (!staff) {
+      throw new Error('Staff not found');
+    }
+    return staff;
+   }
 }

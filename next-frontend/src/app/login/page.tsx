@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import api from "@/app/lib/axios";
 import { delay } from "@/app/utils/delays";
+import { useCookie } from "next-cookie";
 
 export default function LoginPage() {
   const [darkMode, setDarkMode] = useState(false);
@@ -13,6 +14,7 @@ export default function LoginPage() {
     type: "success" | "error";
   } | null>(null);
   const [visible, setVisible] = useState(false);
+  const cookie = useCookie("jwtToken");
 
   const showToast = (message: string, type: "success" | "error") => {
     setToast({ message, type });
@@ -40,11 +42,21 @@ export default function LoginPage() {
         const role = res.data.role;
         const id = res.data.id;
 
+        cookie.set("jwtToken", token, {
+          maxAge: 60 * 60 * 24 * 7,
+          sameSite: "strict",
+          httpOnly: true,
+        });
+
+        const readToken = () => {
+          const jwt = cookie.get("jwtToken");
+          console.log("JWT:", jwt);
+        };
+
         localStorage.setItem("jwt", token);
+
         localStorage.setItem("role", role);
         localStorage.setItem("id", id);
-
-       
 
         console.log("Login success:", res.data.message);
 
