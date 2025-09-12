@@ -85,4 +85,8 @@ export class ManagerGETController {
   getStaffById(@Param('id', ParseIntPipe) id: number) {
     return this.getIdService.getStaffById(id);
   }
+  @Get('financials/:id')
+  getFinancialsById(@Param('id', ParseIntPipe) id: number) {
+    return this.getIdService.getFinancialsById(id);
+  }
 }
