@@ -1,4 +1,3 @@
-// components/GlobalNotification.tsx
 "use client";
 
 import { useEffect, useRef } from "react";
@@ -13,8 +12,7 @@ export default function GlobalNotification() {
     if (!storedId) return;
     const userId = Number(storedId);
 
-    // 1️⃣ Register Service Worker & request Notification permission
-    async function setupSW() {
+    async function setupServiceWorker() {
       if ("serviceWorker" in navigator && "Notification" in window) {
         try {
           const registration = await navigator.serviceWorker.register("/service-worker.js");
@@ -27,10 +25,10 @@ export default function GlobalNotification() {
         }
       }
     }
-    setupSW();
+    setupServiceWorker();
 
-    // 2️⃣ Fetch unread notifications from backend and show
-    async function fetchUnreadNotifications() {
+
+    async function showUnreadNotifications() {
       try {
         const res = await api.get(`/notifications/staff/${userId}`);
         const notifications = (res.data || []).map((item: any) => ({
@@ -42,29 +40,28 @@ export default function GlobalNotification() {
         }));
 
         notifications
-          .filter((n) => !n.isRead)
-          .forEach((n) => {
+          .filter(n => !n.isRead)
+          .forEach(n => {
             if (Notification.permission === "granted") {
               new Notification(n.title, { body: n.message, icon: "/favicon.ico" });
             }
           });
-
-        // Optionally mark all as read in backend
-        await api.post(`/notifications/staff/${userId}/read-all`);
       } catch (err) {
-        console.error("Fetch notifications failed:", err);
+        console.error("Fetching unread notifications failed:", err);
       }
     }
-    fetchUnreadNotifications();
+    showUnreadNotifications();
 
-    // 3️⃣ Subscribe to Pusher for real-time notifications
+ 
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
-      authEndpoint: "/pusher/auth",
+     authEndpoint: "http://localhost:10000/pusher/auth",
       auth: {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          'Content-Type': 'application/json'
         },
+      
       },
     });
 
@@ -72,12 +69,10 @@ export default function GlobalNotification() {
     channel.bind("new-notification", (data: any) => {
       console.log("New notification received:", data);
 
-      // Show notification in browser
       if (Notification.permission === "granted") {
         new Notification(data.title, { body: data.message, icon: "/favicon.ico" });
       }
 
-      // Forward to service worker for OS notifications (optional)
       if (navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage({
           type: "SHOW_NOTIFICATION",
@@ -86,13 +81,12 @@ export default function GlobalNotification() {
             title: data.title,
             message: data.message,
             icon: "/favicon.ico",
-            url: "/", // optional: click to open URL
+            url: "/", 
           },
         });
       }
     });
 
-    // Cleanup on unmount
     return () => {
       channel.unbind_all && channel.unbind_all();
       pusher.unsubscribe(`private-user-${userId}`);

@@ -13,6 +13,7 @@ export class PusherAuthController {
   });
 
   @Post('auth')
+
   authenticate(@Req() req: Request) {
     const { socket_id: socketId, channel_name: channel } = req.body;
 

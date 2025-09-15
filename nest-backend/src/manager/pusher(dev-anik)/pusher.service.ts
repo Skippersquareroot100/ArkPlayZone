@@ -14,7 +14,8 @@ export class PusherService {
       useTLS: true,
     });
   }
-
+ 
+  
   async trigger(channel: string, event: string, data: any) {
     return this.pusher.trigger(channel, event, data);
   }

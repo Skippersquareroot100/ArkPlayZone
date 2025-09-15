@@ -7,8 +7,9 @@ import * as bodyParser from 'body-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
-  app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
+
   app.enableCors({
     origin: 'http://localhost:9001',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
@@ -17,4 +18,5 @@ async function bootstrap() {
   });
   await app.listen(process.env.PORT ?? 10000, '0.0.0.0');
 }
+
 bootstrap();

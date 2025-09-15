@@ -9,12 +9,12 @@ export default function LoginPage() {
   const [darkMode, setDarkMode] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const cookie = useCookie();
   const [toast, setToast] = useState<{
     message: string;
     type: "success" | "error";
   } | null>(null);
   const [visible, setVisible] = useState(false);
-  const cookie = useCookie("jwtToken");
 
   const showToast = (message: string, type: "success" | "error") => {
     setToast({ message, type });
@@ -41,20 +41,9 @@ export default function LoginPage() {
         const token = res.data.token;
         const role = res.data.role;
         const id = res.data.id;
-
-        cookie.set("jwtToken", token, {
-          maxAge: 60 * 60 * 24 * 7,
-          sameSite: "strict",
-          httpOnly: true,
-        });
-
-        const readToken = () => {
-          const jwt = cookie.get("jwtToken");
-          console.log("JWT:", jwt);
-        };
-
+        const ck = `Bearer ${token}`;
+        cookie.set("jwtToken", token, { path: "/", maxAge: 60 * 60 * 24 * 7 });
         localStorage.setItem("jwt", token);
-
         localStorage.setItem("role", role);
         localStorage.setItem("id", id);
 
