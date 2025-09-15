@@ -36,6 +36,12 @@ export function CustomerNavBar() {
           {/* Desktop links */}
           <div className="hidden md:flex space-x-6">
             <a
+              href="/customer"
+              className="text-theme hover:text-accent transition-colors"
+            >
+              Home
+            </a>
+            <a
               href="/customer/CustomerDashboard"
               className="text-theme hover:text-accent transition-colors"
             >
@@ -54,7 +60,7 @@ export function CustomerNavBar() {
               Activity
             </a>
             <a
-              href="/customer/Profile"
+              href="/customer/profile"
               className="text-theme hover:text-accent transition-colors"
             >
               Profile
@@ -76,66 +82,8 @@ export function CustomerNavBar() {
               </a>
             )}
           </div>
-
-          {/* Mobile hamburger */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-accent focus:outline-none"
-            >
-              {isOpen ? <X size={28} /> : <Menu size={28} />}
-            </button>
-          </div>
         </div>
       </div>
-
-      {/* Mobile dropdown */}
-      {isOpen && (
-        <div className="md:hidden bg-white/60 backdrop-blur-md border-t border-accent">
-          <div className="px-2 pt-2 pb-3 space-y-1">
-            <a
-              href="/customer/CustomerDashboard"
-              className="block text-theme px-3 py-2 rounded-md hover:bg-accent hover:text-white transition"
-            >
-              Dashboard
-            </a>
-            <a
-              href="/customer/Bookings"
-              className="block text-theme px-3 py-2 rounded-md hover:bg-accent hover:text-white transition"
-            >
-              Bookings
-            </a>
-            <a
-              href="/customer/Activity"
-              className="block text-theme px-3 py-2 rounded-md hover:bg-accent hover:text-white transition"
-            >
-              Activity
-            </a>
-            <a
-              href="/customer/Profile"
-              className="block text-theme px-3 py-2 rounded-md hover:bg-accent hover:text-white transition"
-            >
-              Profile
-            </a>
-
-            {isLoggedIn ? (
-              <button
-                onClick={logout}
-                className="block text-theme px-3 py-2 rounded-md hover:text-red-400 transition w-full text-left"
-              >
-                Logout
-              </button>
-            ) : (
-              <a
-                href="/login"
-                className="block text-theme px-3 py-2 rounded-md hover:text-accent transition"
-              >
-                Login
-              </a>
-            )}
-          </div>
-        </div>
-      )}
     </nav>
   );
 }
