@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
+import api from "@/app/lib/axios";
 export default function CustomerProfile() {
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -46,11 +46,68 @@ export default function CustomerProfile() {
       setProfile((prev: any) => ({ ...prev, [name]: value }));
     }
   };
+  const handleDeleteAccount = async () => {
+  if (!profile?.customer_id) return;
 
-  const handleSave = () => {
-    localStorage.setItem("user_data", JSON.stringify(profile)); // update localStorage
+  const confirmDelete = confirm("Are you sure you want to delete your account?");
+  if (!confirmDelete) return;
+
+  try {
+    const token = localStorage.getItem("jwt"); // if your API needs auth
+    const res = await api.delete(`/customer/delete/${profile.customer_id}`, {
+    });
+
+    if (res.data.statusCode === 200) {
+      
+      localStorage.removeItem("jwt");
+      localStorage.removeItem("role");
+      localStorage.removeItem("user_data");
+      router.push("/customer"); // redirect to login page
+    } else {
+     
+    }
+  } catch (err) {
+    console.error("Delete account failed", err);
+    
+  }
+};
+
+
+  const handleSave = async () => {
+   // localStorage.setItem("user_data", JSON.stringify(profile)); 
     setIsEditing(false);
-    alert("Profile updated successfully!");
+     const nameParts = (profile.name || "").split(" ");
+    const payload: any = {
+        first_name : nameParts[0],
+        middle_name : nameParts[1] || "",
+        last_name : nameParts[2],
+        email : profile.email,
+        phone_number : profile.phone,
+        username : profile.credentials?.username,
+        password : "",
+        city : profile.address?.city,
+        postal_code : profile.address?.postal_code,
+        street_no : 15,
+        street_name: profile.address?.street_name || "N/A",
+        apartment_name: profile.address?.apartment_name || "N/A",
+  };
+
+    try{
+        
+        const res = await api.put(`/customer/update/${profile.customer_id}`, payload, {
+  headers: { "Content-Type": "application/json" },
+});
+         if(res.data.statusCode === 200){   
+            localStorage.setItem("user_data", JSON.stringify(res.data.data));
+            setProfile(res.data.data);
+           // showToast("Profile updated successfully", "success");
+         }else{
+            //showToast(res.data.message || "Failed to update profile", "error");
+         }
+    }catch(err){
+        console.error("Failed to update profile", err);
+    }
+    
   };
 
   if (loading) {
@@ -220,11 +277,16 @@ export default function CustomerProfile() {
           className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
             Change Password
           </button>
-          <button className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+          <button
+            onClick={handleDeleteAccount}
+            className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+            >
             Delete Account
-          </button>
+            </button>
         </div>
       </div>
     </div>
   );
 }
+
+
