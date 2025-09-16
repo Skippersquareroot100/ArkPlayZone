@@ -38,7 +38,7 @@ export default function LoginLayout({
           </button>
         </div>
 
-\
+
         <nav className="mt-6 pl-2 pr-2">
           <ul className="space-y-2">
               <li>
