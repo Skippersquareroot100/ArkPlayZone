@@ -30,19 +30,42 @@ export default function LoginPage() {
     }
   }, []);
 
-  const login = async (e) => {
+  const login = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     try {
+      // customer login check
+      
+        const customer_res = await api.post("/customer/login", {
+          email,
+          password,
+          
+        },
+        { withCredentials: true}
+        
+      );
+        if (customer_res.data.statusCode === 200) {
+          
+          const role = "customer";
+          localStorage.setItem("role", role);
+          localStorage.setItem("jwt", customer_res.data.token);
+          localStorage.setItem("user_data", JSON.stringify(customer_res.data.data));
+      
+
+          return window.location.href = "/customer";
+        
+      }
+        
+       
       const res = await api.post("/manager/staff-login", {
         email,
         password,
       });
+      
       if (res.data.statusCode === 200) {
         const token = res.data.token;
         const role = res.data.role;
         const id = res.data.id;
-        const ck = `Bearer ${token}`;
-        cookie.set("jwtToken", token, { path: "/", maxAge: 60 * 60 * 24 * 7 });
+
         localStorage.setItem("jwt", token);
         localStorage.setItem("role", role);
         localStorage.setItem("id", id);
@@ -70,7 +93,15 @@ export default function LoginPage() {
         showToast("Invalid credentials!", res.data.error);
       }
     } catch (err) {
-      showToast("Invalid credentials!", err.response?.data || err.message);
+      let errorMessage = "An error occurred!";
+      if (typeof err === "object" && err !== null) {
+        if ("response" in err && typeof (err as any).response?.data === "string") {
+          errorMessage = (err as any).response.data;
+        } else if ("message" in err && typeof (err as any).message === "string") {
+          errorMessage = (err as any).message;
+        }
+      }
+      showToast(errorMessage, "error");
     }
   };
 
