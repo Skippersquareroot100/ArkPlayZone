@@ -37,7 +37,7 @@ export default function StaffFinancialPage() {
     }
 
     const fetchStaff = async () => {
-      const id = localStorage.getItem("id"); // replace with dynamic staff ID if needed
+      const id = localStorage.getItem("id"); 
       if (!id) return;
 
       try {
@@ -84,7 +84,7 @@ export default function StaffFinancialPage() {
           </button>
         </div>
 
-        {/* Top Blocks */}
+  
         <div className="grid grid-cols-3 gap-6 mb-6">
           <div className="bg-card p-6 rounded-2xl shadow flex flex-col items-center">
             <h2 className="text-lg font-semibold text-accent">Salary</h2>
@@ -100,7 +100,7 @@ export default function StaffFinancialPage() {
           </div>
         </div>
 
-        {/* Financial Records */}
+
         <div className="bg-card p-6 rounded-2xl shadow">
           <h2 className="text-lg font-semibold mb-4 text-accent">Salary History</h2>
           <table className="w-full table-auto border-collapse border border-gray-300 text-theme">

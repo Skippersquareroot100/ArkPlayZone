@@ -68,7 +68,7 @@ export default function StaffDetails() {
 
     fetchStaff();
 
-    // Fetch last update time from localStorage by staff id
+    
     const lastUpdate = localStorage.getItem(`staff_update_${id}`);
     if (lastUpdate) setUpdateTime(lastUpdate);
   }, [id]);
@@ -225,7 +225,7 @@ export default function StaffDetails() {
           </button>
         </div>
 
-        {/* Display last update time */}
+       
         {updateTime && (
           <p className="mt-2 text-sm text-green-600 text-center">
             Salary last updated: {updateTime}
@@ -233,7 +233,7 @@ export default function StaffDetails() {
         )}
       </div>
 
-      {/* Toast Message */}
+ 
       {toast && (
         <div
           className={`
