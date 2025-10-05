@@ -57,6 +57,14 @@ export class NotificationPusherService {
     });
   }
 
+  async getNotificationsByEmail(email: string) {
+    return this.pusherNotificationMapperRepository.find({
+      where: { staff: { email: email } },
+      relations: ['pusherNotification'],
+      order: { pusherNotification: { date: 'DESC' } },
+    });
+  }
+
   async markAsRead(StaffId: number, notificationId: number) {
     const mapper = await this.pusherNotificationMapperRepository.findOne({
       where: {

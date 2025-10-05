@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 
 import { CreateNotificationDto } from './createNotification.dto';
 import { NotificationPusherService } from './notificationPuhser.service';
@@ -22,6 +22,12 @@ export class NotificationController {
   @Get('staff/:id')
   async getStaffNotifications(@Param('id') staffId: number) {
     return this.notificationService.getNotifications(staffId);
+  }
+
+  @Get('staff')
+  async getStaffNotificationsByEmail(@Query('email') email: string) {
+    console.log('Received email:', email);
+    return this.notificationService.getNotificationsByEmail(email);
   }
 
   @Post('staff/:staffId/read/:notificationId')
