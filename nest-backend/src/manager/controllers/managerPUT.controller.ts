@@ -14,18 +14,11 @@ import { UpdateStaffService } from '../services/updateStaff.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage, MulterError } from 'multer';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
-@UseGuards(JwtAuthGuard)
+
 @Controller('manager')
 export class ManagerPUTController {
   constructor(private readonly updateStaffService: UpdateStaffService) {}
   @Put(':id')
-  @UsePipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  )
   @UseInterceptors(
     FileInterceptor('file', {
       fileFilter: (req, file, cb) => {
